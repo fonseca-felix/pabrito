@@ -51,6 +51,12 @@ export default class ModeSelectScene extends Phaser.Scene {
 
       const bgBox = this.add.rectangle(0, 0, 680, 50, 0x1A1A24, 0.9);
       bgBox.setStrokeStyle(2, 0x38384D);
+      bgBox.setInteractive({ useHandCursor: true });
+      bgBox.on('pointerdown', () => {
+        this.selectedIndex = index;
+        this.updateSelectionVisuals();
+        this.confirmSelection();
+      });
 
       const titleText = this.add.text(-320, -12, mode.label, {
         fontFamily: 'monospace',

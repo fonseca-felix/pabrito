@@ -2,27 +2,34 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>KUARAHY — 2D Arcade Fighting Game</title>
     <meta name="description" content="Jogo de luta arcade 2D em pixel art com tema paraguaio e combate técnico." />
     <meta property="og:title" content="KUARAHY — 2D Arcade Fighting Game" />
     <meta property="og:description" content="Jogo de luta arcade 2D em pixel art com tema paraguaio." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <!-- Folhas de estilo da moldura do gabinete e HUD -->
+    <!-- Folhas de estilo da moldura do gabinete, controles virtuais e HUD -->
     <link rel="stylesheet" href="/css/cabinet.css" />
     <link rel="stylesheet" href="/css/hud.css" />
     <!-- Phaser 3 via CDN com fallback nativo -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
   </head>
   <body>
-    <!-- Estrutura do Gabinete de Fliperama Arcade (Visual e Estético Puro) -->
+    <!-- Estrutura do Gabinete de Fliperama Arcade Responsivo -->
     <div class="arcade-cabinet">
       <!-- Marquise Superior / Marquee -->
       <header class="cabinet-marquee">
         <div class="marquee-decor-left">◆ ◆ ◆</div>
         <h1 class="marquee-title">KUARAHY</h1>
-        <div class="marquee-decor-right">◆ ◆ ◆</div>
+        <div class="marquee-actions">
+          <button id="btn-toggle-movelist" class="hud-top-btn" type="button" title="Abrir Lista de Golpes (TAB)">
+            📋 GOLPES [TAB]
+          </button>
+          <button id="toggle-crt-btn" type="button" class="hud-top-btn crt-btn" title="Alternar Filtro CRT" onclick="document.getElementById('crt-overlay').classList.toggle('active')">
+            CRT: ON/OFF
+          </button>
+        </div>
       </header>
 
       <!-- Moldura da Tela / CRT Bezel -->
@@ -33,34 +40,123 @@
           
           <!-- Filtro CRT Scanlines opcional via CSS -->
           <div id="crt-overlay" class="crt-overlay active"></div>
+
+          <!-- Controles Virtuais na Tela (Visíveis no Canto e para Mobile/Toque) -->
+          <div id="on-screen-controls" class="on-screen-controls">
+            <!-- D-Pad Direcional no Canto Inferior Esquerdo -->
+            <div class="virtual-dpad">
+              <button class="v-btn d-up" id="v-up" data-key="up">▲</button>
+              <div class="d-row">
+                <button class="v-btn d-left" id="v-left" data-key="left">◀</button>
+                <div class="d-center"></div>
+                <button class="v-btn d-right" id="v-right" data-key="right">▶</button>
+              </div>
+              <button class="v-btn d-down" id="v-down" data-key="down">▼</button>
+            </div>
+
+            <!-- Botões de Ação Arcade no Canto Inferior Direito -->
+            <div class="virtual-actions">
+              <div class="action-top-row">
+                <button class="v-btn btn-throw" id="v-throw" data-trigger="throwJustDown">
+                  <span class="v-label">AGARRAR</span>
+                  <span class="v-sub">[U]</span>
+                </button>
+                <button class="v-btn btn-block" id="v-block" data-key="block">
+                  <span class="v-label">DEFESA</span>
+                  <span class="v-sub">[I]</span>
+                </button>
+                <button class="v-btn btn-special" id="v-special" data-trigger="specialJustDown">
+                  <span class="v-label">ESPECIAL</span>
+                  <span class="v-sub">[L]</span>
+                </button>
+              </div>
+              <div class="action-bottom-row">
+                <button class="v-btn btn-punch" id="v-punch" data-trigger="punchJustDown">
+                  <span class="v-label">SOCO</span>
+                  <span class="v-sub">[J]</span>
+                </button>
+                <button class="v-btn btn-kick" id="v-kick" data-trigger="kickJustDown">
+                  <span class="v-label">CHUTE</span>
+                  <span class="v-sub">[K]</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
-      <!-- Painel Inferior de Instruções e Decoração Estética (sem botões interativos de jogo) -->
+      <!-- Painel Inferior de Instruções -->
       <footer class="cabinet-bottom">
-        <div class="speaker-grille">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
         <div class="controls-legend">
           <div class="legend-col">
             <span class="legend-badge p1">P1</span>
-            <span class="legend-text">W/A/S/D • J:Soco • K:Chute • L:Esp • U:Agarrão • I:Defesa/Contra</span>
+            <span class="legend-text">Setas ou W/A/S/D • J:Soco • K:Chute • L:Especial • I:Defesa • U:Agarrão • TAB:Golpes</span>
           </div>
-          <div class="crt-toggle-container">
-            <button id="toggle-crt-btn" type="button" class="crt-toggle-button" onclick="document.getElementById('crt-overlay').classList.toggle('active')">
-              SCANLINES CRT: ON/OFF
-            </button>
-          </div>
-          <div class="legend-col">
+          <div class="legend-col p2-col">
             <span class="legend-badge p2">P2</span>
-            <span class="legend-text">Setas • Num1:Soco • Num2:Chute • Num3:Esp • Num4:Agarrão • Num5:Defesa</span>
+            <span class="legend-text">Num1:Soco • Num2:Chute • Num3:Esp • Num5:Defesa • Num4:Agarrão</span>
           </div>
-        </div>
-        <div class="coin-slots">
-          <div class="coin-insert">INSERT COIN [1P / 2P]</div>
         </div>
       </footer>
     </div>
+
+    <!-- Script de Inicialização dos Controles na Tela -->
+    <script>
+      window.__virtualInputs = {
+        up: false, down: false, left: false, right: false,
+        block: false, punchJustDown: false, kickJustDown: false,
+        specialJustDown: false, throwJustDown: false
+      };
+
+      // Mapeamento de cliques e toques dos botões na tela
+      document.addEventListener('DOMContentLoaded', () => {
+        const bindKeyBtn = (id, keyName) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const start = (e) => { e.preventDefault(); window.__virtualInputs[keyName] = true; el.classList.add('active'); };
+          const end = (e) => { e.preventDefault(); window.__virtualInputs[keyName] = false; el.classList.remove('active'); };
+          el.addEventListener('pointerdown', start);
+          el.addEventListener('pointerup', end);
+          el.addEventListener('pointerleave', end);
+          el.addEventListener('pointercancel', end);
+        };
+
+        const bindTriggerBtn = (id, triggerName) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const trigger = (e) => {
+            e.preventDefault();
+            window.__virtualInputs[triggerName] = true;
+            el.classList.add('active');
+            setTimeout(() => el.classList.remove('active'), 120);
+          };
+          el.addEventListener('pointerdown', trigger);
+        };
+
+        // Direcionais
+        bindKeyBtn('v-up', 'up');
+        bindKeyBtn('v-down', 'down');
+        bindKeyBtn('v-left', 'left');
+        bindKeyBtn('v-right', 'right');
+        bindKeyBtn('v-block', 'block');
+
+        // Ações de Ataque
+        bindTriggerBtn('v-punch', 'punchJustDown');
+        bindTriggerBtn('v-kick', 'kickJustDown');
+        bindTriggerBtn('v-special', 'specialJustDown');
+        bindTriggerBtn('v-throw', 'throwJustDown');
+
+        // Botão de Lista de Golpes
+        const movelistBtn = document.getElementById('btn-toggle-movelist');
+        if (movelistBtn) {
+          movelistBtn.addEventListener('click', () => {
+            if (typeof window.toggleMovelistInGame === 'function') {
+              window.toggleMovelistInGame();
+            }
+          });
+        }
+      });
+    </script>
 
     <!-- Inicializador principal do jogo -->
     <script type="module" src="/src/main.js"></script>

@@ -24,8 +24,8 @@ export default class TrainingScene extends Phaser.Scene {
 
     if (!this.p1Data || !this.p2Data) {
       const all = this.registry.get('fightersData') || [];
-      this.p1Data = all[0] || { id: 'terere', name: 'Tereré', color: '#2E8B57', stats: { damage: 3, speed: 3, defense: 3, range: 3 } };
-      this.p2Data = all[5] || { id: 'guarani', name: 'Guarani', color: '#1E6B3A', stats: { damage: 4, speed: 3, defense: 4, range: 3 } };
+      this.p1Data = all.find(f => f.id === 'cabanas') || all[0];
+      this.p2Data = all.find(f => f.id === 'itaipu_colossus') || all[1] || all[0];
     }
 
     // Cenário estilo Dojo de Treinamento em Pixel Art

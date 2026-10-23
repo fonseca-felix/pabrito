@@ -27,8 +27,8 @@ export default class FightScene extends Phaser.Scene {
     // Se os dados não vierem carregados por algum motivo, carrega padrão do registry
     if (!this.p1Data || !this.p2Data) {
       const all = this.registry.get('fightersData') || [];
-      this.p1Data = all[0] || { id: 'terere', name: 'Tereré', color: '#2E8B57', stats: { damage: 3, speed: 3, defense: 3, range: 3 } };
-      this.p2Data = all[5] || { id: 'guarani', name: 'Guarani', color: '#1E6B3A', stats: { damage: 4, speed: 3, defense: 4, range: 3 } };
+      this.p1Data = all.find(f => f.id === 'cabanas') || all[0];
+      this.p2Data = all.find(f => f.id === 'itaipu_colossus') || all[1] || all[0];
     }
 
     // 1. Cenário da Arena (Pixel Art Temático Paraguaio)
@@ -69,6 +69,9 @@ export default class FightScene extends Phaser.Scene {
 
     // 6. HUD Desenhado via Canvas
     this.createHudCanvas(width, height);
+
+    // 6.5. Painel Modal de Lista de Golpes (Movelist)
+    this.createMovelistModal(width, height);
 
     // 7. Textos Centrais de Transição (ROUND 1, FIGHT, K.O., VICTORY)
     this.bannerText = this.add.text(width / 2, height / 2 - 50, '', {
@@ -142,18 +145,33 @@ export default class FightScene extends Phaser.Scene {
   }
 
   setupInputs() {
-    // P1 (Teclado Esquerdo)
+    // P1 aceita TANTO WASD quanto Setas do teclado
     this.p1Keys = this.input.keyboard.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
       down: Phaser.Input.Keyboard.KeyCodes.S,
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D,
+      upArrow: Phaser.Input.Keyboard.KeyCodes.UP,
+      downArrow: Phaser.Input.Keyboard.KeyCodes.DOWN,
+      leftArrow: Phaser.Input.Keyboard.KeyCodes.LEFT,
+      rightArrow: Phaser.Input.Keyboard.KeyCodes.RIGHT,
       punch: Phaser.Input.Keyboard.KeyCodes.J,
+      punchAlt: Phaser.Input.Keyboard.KeyCodes.Z,
       kick: Phaser.Input.Keyboard.KeyCodes.K,
+      kickAlt: Phaser.Input.Keyboard.KeyCodes.X,
       special: Phaser.Input.Keyboard.KeyCodes.L,
+      specialAlt: Phaser.Input.Keyboard.KeyCodes.C,
       throwKey: Phaser.Input.Keyboard.KeyCodes.U,
       blockKey: Phaser.Input.Keyboard.KeyCodes.I,
     });
+
+    // Tecla Movelist (TAB ou M ou ESC)
+    this.movelistKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
+    this.movelistKeyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+    this.escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+
+    // Conectar botão HTML externo se existir
+    window.toggleMovelistInGame = () => this.toggleMovelist();
 
     // P2 (Teclado Direito - Setas + Numpad e atalhos alternativos para teclados compactos)
     this.p2Keys = this.input.keyboard.addKeys({
@@ -212,6 +230,21 @@ export default class FightScene extends Phaser.Scene {
       stroke: '#0D0D12',
       strokeThickness: 5,
     }).setOrigin(0.5, 0.5).setDepth(16);
+
+    // Mini Portraits ao lado das barras de vida
+    const p1PortraitKey = `portrait_${this.p1Data.id}_p1`;
+    if (this.textures.exists(p1PortraitKey)) {
+      this.add.image(28, 59, p1PortraitKey).setDisplaySize(36, 36).setDepth(16);
+      this.add.rectangle(28, 59, 38, 38).setStrokeStyle(2, 0x4A90C2).setDepth(17);
+    }
+
+    const isMirror = this.p1Data.id === this.p2Data.id;
+    const p2PortraitKey = `portrait_${this.p2Data.id}_${isMirror ? 'p2' : 'p2'}`;
+    if (this.textures.exists(p2PortraitKey)) {
+      const p2Img = this.add.image(width - 28, 59, p2PortraitKey).setDisplaySize(36, 36).setDepth(16);
+      p2Img.setFlipX(true);
+      this.add.rectangle(width - 28, 59, 38, 38).setStrokeStyle(2, 0xC8102E).setDepth(17);
+    }
   }
 
   startRound() {
@@ -303,6 +336,14 @@ export default class FightScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    // Abrir/Fechar Lista de Golpes com TAB, M ou ESC
+    if (Phaser.Input.Keyboard.JustDown(this.movelistKey) ||
+        Phaser.Input.Keyboard.JustDown(this.movelistKeyM) ||
+        Phaser.Input.Keyboard.JustDown(this.escKey)) {
+      this.toggleMovelist();
+    }
+
+    if (this.isMovelistOpen) return;
     // 1. Processar Inputs do P1
     const p1Input = this.readP1Input();
 
@@ -336,29 +377,52 @@ export default class FightScene extends Phaser.Scene {
   }
 
   readP1Input() {
-    if (!this.isRoundActive) return { block: false };
+    if (!this.isRoundActive || this.isMovelistOpen) return { block: false };
 
-    const punchJustDown = Phaser.Input.Keyboard.JustDown(this.p1Keys.punch);
-    const kickJustDown = Phaser.Input.Keyboard.JustDown(this.p1Keys.kick);
-    const specialJustDown = Phaser.Input.Keyboard.JustDown(this.p1Keys.special);
+    const v = window.__virtualInputs || {};
 
-    const downIsDown = this.p1Keys.down.isDown;
-    const rightIsDown = this.p1Keys.right.isDown;
+    const punchJustDown = Phaser.Input.Keyboard.JustDown(this.p1Keys.punch) ||
+                          Phaser.Input.Keyboard.JustDown(this.p1Keys.punchAlt) ||
+                          Boolean(v.punchJustDown);
+
+    const kickJustDown = Phaser.Input.Keyboard.JustDown(this.p1Keys.kick) ||
+                         Phaser.Input.Keyboard.JustDown(this.p1Keys.kickAlt) ||
+                         Boolean(v.kickJustDown);
+
+    const specialJustDown = Phaser.Input.Keyboard.JustDown(this.p1Keys.special) ||
+                            Phaser.Input.Keyboard.JustDown(this.p1Keys.specialAlt) ||
+                            Boolean(v.specialJustDown);
+
+    const throwJustDown = Phaser.Input.Keyboard.JustDown(this.p1Keys.throwKey) ||
+                          Boolean(v.throwJustDown);
+
+    // Consumir triggers instantâneos
+    if (v.punchJustDown) v.punchJustDown = false;
+    if (v.kickJustDown) v.kickJustDown = false;
+    if (v.specialJustDown) v.specialJustDown = false;
+    if (v.throwJustDown) v.throwJustDown = false;
+
+    // Movimentação aceita WASD, Setas e botões da tela
+    const isUp = this.p1Keys.up.isDown || this.p1Keys.upArrow.isDown || Boolean(v.up);
+    const isDown = this.p1Keys.down.isDown || this.p1Keys.downArrow.isDown || Boolean(v.down);
+    const isLeft = this.p1Keys.left.isDown || this.p1Keys.leftArrow.isDown || Boolean(v.left);
+    const isRight = this.p1Keys.right.isDown || this.p1Keys.rightArrow.isDown || Boolean(v.right);
+    const isBlock = this.p1Keys.blockKey.isDown || Boolean(v.block);
 
     return {
-      up: this.p1Keys.up.isDown,
-      down: downIsDown,
-      left: this.p1Keys.left.isDown,
-      right: rightIsDown,
+      up: isUp,
+      down: isDown,
+      left: isLeft,
+      right: isRight,
       punch: punchJustDown,
-      punchHeavy: punchJustDown && rightIsDown,
+      punchHeavy: punchJustDown && isRight,
       kick: kickJustDown,
-      kickHeavy: kickJustDown && rightIsDown,
-      special1: specialJustDown && downIsDown,
-      special2: specialJustDown && !downIsDown,
+      kickHeavy: kickJustDown && isRight,
+      special1: specialJustDown && isDown,
+      special2: specialJustDown && !isDown,
       superMove: specialJustDown && this.p1.meter >= 100,
-      throw: Phaser.Input.Keyboard.JustDown(this.p1Keys.throwKey),
-      block: this.p1Keys.blockKey.isDown,
+      throw: throwJustDown,
+      block: isBlock,
     };
   }
 
@@ -421,6 +485,68 @@ export default class FightScene extends Phaser.Scene {
         }
       }
     }
+  }
+
+  createMovelistModal(width, height) {
+    this.isMovelistOpen = false;
+
+    this.movelistContainer = this.add.container(width / 2, height / 2).setDepth(100).setVisible(false);
+
+    // Fundo escuro com blur simulado
+    const backdrop = this.add.rectangle(0, 0, width, height, 0x000000, 0.85);
+    backdrop.setInteractive();
+
+    // Caixa do menu
+    const modalW = 680;
+    const modalH = 440;
+    const box = this.add.rectangle(0, 0, modalW, modalH, 0x121219);
+    box.setStrokeStyle(3, 0xE8B33A);
+
+    // Título Superior
+    const titleText = this.add.text(0, -modalH / 2 + 30, 'LISTA DE GOLPES & COMANDOS', {
+      fontFamily: 'monospace', fontSize: '20px', fontStyle: 'bold', color: '#E8B33A', letterSpacing: '4px',
+    }).setOrigin(0.5, 0.5);
+
+    // Dados de Golpes do P1
+    const p1 = this.p1Data;
+    const sp1 = p1.specials?.special_1 || { name: 'Especial 1', input: '↓→+Soco' };
+    const sp2 = p1.specials?.special_2 || { name: 'Especial 2', input: '→↓+Chute' };
+    const sup = p1.super || { name: 'Super Golpe', input: '↓→↓→+Especial' };
+
+    const contentText = this.add.text(-modalW / 2 + 40, -modalH / 2 + 65, 
+      `LUTADOR ATUAL: ${p1.name.toUpperCase()} (${p1.title || p1.archetype.toUpperCase()})\n\n` +
+      `⚡ GOLPES ESPECIAIS (P1):\n` +
+      `  ► ${sp1.name.padEnd(28)} ${sp1.input || '↓→ + Soco [J]'} (Dano: ${sp1.damage || 14})\n` +
+      `  ► ${sp2.name.padEnd(28)} ${sp2.input || '→↓ + Chute [K]'} (Dano: ${sp2.damage || 14})\n` +
+      `  ★ SUPER: ${sup.name.padEnd(24)} Especial [L] com 100% de Energia!\n\n` +
+      `🥊 GOLPES BÁSICOS & MOVIMENTO:\n` +
+      `  • Soco Fraco: [J] ou [Z]           • Soco Forte:  [D + J] ou [→ + J]\n` +
+      `  • Chute Fraco: [K] ou [X]          • Chute Forte: [D + K] ou [→ + K]\n` +
+      `  • Mover: [A / D] ou [◀ / ▶]       • Pular: [W] ou [▲] | Agachar: [S] ou [▼]\n` +
+      `  • Defesa: Segurar [I]             • Contra/Parry: Toque em [I] no frame exato\n` +
+      `  • Agarrão: [U]\n\n` +
+      `💡 DICA DE ARCADE: Golpes normais cancelam em golpes especiais (Combos fluidos!)`, {
+      fontFamily: 'monospace', fontSize: '12px', color: '#FFFFFF', lineHeight: 18,
+    });
+
+    // Botão de Fechar
+    const closeBtnBg = this.add.rectangle(0, modalH / 2 - 35, 260, 36, 0xC8102E);
+    closeBtnBg.setStrokeStyle(2, 0xFFFFFF);
+    closeBtnBg.setInteractive({ useHandCursor: true });
+
+    const closeBtnText = this.add.text(0, modalH / 2 - 35, 'VOLTAR AO COMBATE [ESC/TAB]', {
+      fontFamily: 'monospace', fontSize: '12px', fontStyle: 'bold', color: '#FFFFFF',
+    }).setOrigin(0.5, 0.5);
+
+    closeBtnBg.on('pointerdown', () => this.toggleMovelist());
+
+    this.movelistContainer.add([backdrop, box, titleText, contentText, closeBtnBg, closeBtnText]);
+  }
+
+  toggleMovelist() {
+    this.isMovelistOpen = !this.isMovelistOpen;
+    this.movelistContainer.setVisible(this.isMovelistOpen);
+    AudioSynth.play(this.isMovelistOpen ? 'menu_select' : 'menu_move');
   }
 
   checkAABB(rectA, rectB) {

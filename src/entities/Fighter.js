@@ -73,6 +73,19 @@ export default class Fighter {
     this.skinShadow = 0xC98B62; // --pele-sombra
     this.goldColor = 0xE8B33A;
 
+    // Spritesheet Real do Lutador (se carregado no Phaser)
+    this.palette = playerIndex === 1 ? 'p1' : 'p2';
+    const idleKey = `${this.data.id}_${this.palette}_idle`;
+    this.hasSpriteSheet = scene.textures.exists(idleKey);
+
+    if (this.hasSpriteSheet) {
+      this.sprite = scene.add.sprite(0, -68, idleKey);
+      this.sprite.setScale(0.70);
+      this.sprite.setOrigin(0.5, 0.78);
+      this.container.add(this.sprite);
+      this.playAnimation('idle');
+    }
+
     // Inicializar renderização visual
     this.renderPixelArt(0);
   }
@@ -96,6 +109,10 @@ export default class Fighter {
 
     this.container.setPosition(x, 430);
     this.body.setVelocity(0, 0);
+    if (this.sprite) {
+      this.sprite.clearTint();
+      this.playAnimation('idle');
+    }
     this.renderPixelArt(0);
   }
 
@@ -113,6 +130,10 @@ export default class Fighter {
       } else {
         this.facing = -1;
       }
+    }
+
+    if (this.sprite) {
+      this.sprite.setFlipX(this.facing === -1);
     }
 
     // Processamento da Máquina de Estados (FSM)
@@ -272,7 +293,7 @@ export default class Fighter {
 
     // Tereré Super: reduz o recovery pela metade nos golpes normais
     let recoveryTime = atk.recovery;
-    if (this.superActiveFrames > 0 && this.data.id === 'terere' && !atk.id) {
+    if (this.superActiveFrames > 0 && (this.data.id === 'terere' || this.data.id === 'terere_master') && !atk.id) {
       recoveryTime = Math.ceil(atk.recovery * 0.5);
     }
 
@@ -427,6 +448,25 @@ export default class Fighter {
     this.frameCounter = 0;
     this.hasHitThisAttack = false;
 
+    // Tocar a animacao do ataque imediatamente
+    if (attackKey === 'special_1') {
+      this.playAnimation('special_1', true);
+    } else if (attackKey === 'special_2') {
+      this.playAnimation('special_2', true);
+    } else if (attackKey === 'heavy_punch') {
+      this.playAnimation('heavy_punch', true);
+    } else if (attackKey === 'light_kick') {
+      this.playAnimation('light_kick', true);
+    } else if (attackKey === 'heavy_kick') {
+      this.playAnimation('heavy_kick', true);
+    } else if (attackKey === 'crouch_attack') {
+      this.playAnimation('crouch', true);
+    } else if (attackKey === 'air_attack') {
+      this.playAnimation('jump', true);
+    } else {
+      this.playAnimation('light_punch', true);
+    }
+
     // SFX do Golpe
     if (attackData.sfx) {
       AudioSynth.play(attackData.sfx);
@@ -437,13 +477,17 @@ export default class Fighter {
     this.superActiveFrames = this.data.super.durationFrames || 180;
     AudioSynth.play('super_activate');
 
-    // Regras culturais e técnicas de Super:
-    // Guarani: super = buff defensivo temporário (armadura 1 hit). NUNCA contra automático nem stunlock.
     if (this.data.id === 'guarani') {
       this.armorHits = 1;
     }
 
-    // Feedback visual épico do super
+    this.state = FighterState.ATTACK;
+    this.currentAttackId = 'super';
+    this.currentAttackData = this.data.super;
+    this.frameCounter = 0;
+    this.hasHitThisAttack = false;
+    this.playAnimation('super_attack', true);
+
     this.scene.cameras.main.flash(120, 232, 179, 58);
   }
 
@@ -550,6 +594,15 @@ export default class Fighter {
   // Renderização de Silhueta Pixel Art sem anti-aliasing (Neo Geo Style)
   renderPixelArt(delta) {
     this.graphics.clear();
+
+    if (this.hasSpriteSheet) {
+      this.updateSpriteAnimation();
+      if (this.superActiveFrames > 0) {
+        this.graphics.lineStyle(2, 0xE8B33A, 0.8);
+        this.graphics.strokeRect(-28, -96, 56, 96);
+      }
+      return;
+    }
 
     const isP1 = this.playerIndex === 1;
     const bodyColor = this.mainColor;
@@ -665,6 +718,55 @@ export default class Fighter {
       const armX = facing === 1 ? 4 : -16;
       this.graphics.fillRect(armX, torsoY + 6, 12, 14);
       this.graphics.strokeRect(armX, torsoY + 6, 12, 14);
+    }
+  }
+
+  playAnimation(animName, forceRestart = false) {
+    if (!this.sprite) return;
+    const animKey = `${this.data.id}_${this.palette}_${animName}`;
+    if (this.scene.anims && this.scene.anims.exists(animKey)) {
+      if (forceRestart || this.sprite.anims?.currentAnim?.key !== animKey || !this.sprite.anims.isPlaying) {
+        this.sprite.play(animKey, true);
+      }
+    }
+  }
+
+  updateSpriteAnimation() {
+    if (this.state === FighterState.KO) {
+      this.playAnimation('defeat_ko');
+    } else if (this.state === FighterState.HIT_STUN) {
+      this.playAnimation('hit_stun');
+      this.sprite.setTint(0xffffff);
+      this.scene.time.delayedCall(70, () => {
+        if (this.sprite) this.sprite.clearTint();
+      });
+    } else if (this.state === FighterState.BLOCK || this.state === FighterState.BLOCK_STUN) {
+      this.playAnimation('block');
+    } else if (this.state === FighterState.JUMP) {
+      this.playAnimation('jump');
+    } else if (this.state === FighterState.CROUCH) {
+      this.playAnimation('crouch');
+    } else if (this.state === FighterState.WALK) {
+      const isWalkingForward = (this.facing === 1 && this.body.velocity.x > 0) || (this.facing === -1 && this.body.velocity.x < 0);
+      this.playAnimation(isWalkingForward ? 'walk_forward' : 'walk_backward');
+    } else if (this.state === FighterState.ATTACK) {
+      if (this.currentAttackId === 'special_1') {
+        this.playAnimation('special_1');
+      } else if (this.currentAttackId === 'special_2') {
+        this.playAnimation('special_2');
+      } else if (this.currentAttackId === 'super') {
+        this.playAnimation('super_attack');
+      } else if (this.currentAttackId === 'heavy_punch') {
+        this.playAnimation('heavy_punch');
+      } else if (this.currentAttackId === 'light_kick') {
+        this.playAnimation('light_kick');
+      } else if (this.currentAttackId === 'heavy_kick') {
+        this.playAnimation('heavy_kick');
+      } else {
+        this.playAnimation('light_punch');
+      }
+    } else {
+      this.playAnimation('idle');
     }
   }
 }

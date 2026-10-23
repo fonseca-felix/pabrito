@@ -1,6 +1,7 @@
 /* ==========================================================================
    KUARAHY — Paleta Oficial & Estilos do Gabinete de Fliperama (Cabinet)
    Estilo visual: Neo Geo / SNK (Garou, KOF '98) — pixel art sem anti-aliasing
+   Totalmente responsivo para Desktop, Tablets e Mobile
    ========================================================================== */
 
 :root {
@@ -31,9 +32,10 @@ html, body {
   background-color: var(--preto-1);
   color: #FFFFFF;
   font-family: 'Courier New', Courier, monospace;
-  overflow-x: hidden;
+  overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: manipulation;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
@@ -42,83 +44,117 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 12px;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
   background: radial-gradient(circle at center, #1A1A24 0%, #0D0D12 100%);
 }
 
-/* Moldura Central do Gabinete */
+/* Moldura Central do Gabinete Responsiva */
 .arcade-cabinet {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
-  max-width: 1040px;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
   background-color: var(--preto-2);
-  border: 4px solid var(--dourado-2);
-  outline: 2px solid var(--preto-1);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  border: 3px solid var(--dourado-2);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.95);
   position: relative;
 }
 
 /* Marquise Superior (Marquee) */
 .cabinet-marquee {
   width: 100%;
-  padding: 10px 24px;
+  padding: 6px 16px;
   background-color: var(--vermelho-2);
-  border-bottom: 4px solid var(--dourado);
+  border-bottom: 3px solid var(--dourado);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+  flex-shrink: 0;
 }
 
 .marquee-title {
   font-family: monospace, 'Courier New', Courier;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 900;
-  letter-spacing: 8px;
+  letter-spacing: 6px;
   color: var(--dourado);
-  text-shadow: 3px 3px 0 var(--vermelho-py), -2px -2px 0 var(--preto-1);
+  text-shadow: 2px 2px 0 var(--vermelho-py), -1px -1px 0 var(--preto-1);
   text-transform: uppercase;
 }
 
-.marquee-decor-left,
-.marquee-decor-right {
-  font-size: 14px;
+.marquee-decor-left {
+  font-size: 12px;
   letter-spacing: 4px;
   color: var(--azul-ceu);
+}
+
+.marquee-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-top-btn {
+  background-color: #242433;
+  color: var(--dourado);
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: bold;
+  border: 1px solid var(--dourado-2);
+  padding: 4px 10px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: transform 0.1s, background-color 0.1s;
+}
+
+.hud-top-btn:hover,
+.hud-top-btn:active {
+  background-color: var(--dourado);
+  color: var(--preto-1);
+  transform: scale(0.96);
+}
+
+.hud-top-btn.crt-btn {
+  color: #FFFFFF;
+  border-color: #555566;
 }
 
 /* Bezel (Moldura que envolve o monitor CRT) */
 .bezel-frame {
   width: 100%;
-  padding: 16px 20px;
+  flex: 1;
+  min-height: 0;
   background-color: #121219;
-  border-top: 4px solid var(--preto-1);
-  border-bottom: 4px solid var(--preto-1);
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .bezel-inner {
   position: relative;
   width: 100%;
-  max-width: 960px;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   background-color: #000000;
-  border: 4px solid #2B2B36;
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.8);
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 /* Container de Canvas do Phaser */
 .game-container {
   width: 100%;
-  aspect-ratio: 960 / 540;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,15 +164,13 @@ body {
 .game-container canvas {
   width: 100% !important;
   height: 100% !important;
-  max-width: 960px;
-  max-height: 540px;
+  object-fit: contain;
   display: block;
   image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
 }
 
-/* Overlay Estético de Scanlines CRT (Linhas de Varredura e Vinheta) */
+/* Overlay Estético de Scanlines CRT */
 .crt-overlay {
   display: none;
   pointer-events: none;
@@ -146,11 +180,11 @@ body {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.5) 100%),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.45) 100%),
     repeating-linear-gradient(
       0deg,
-      rgba(0, 0, 0, 0.28) 0px,
-      rgba(0, 0, 0, 0.28) 1px,
+      rgba(0, 0, 0, 0.22) 0px,
+      rgba(0, 0, 0, 0.22) 1px,
       transparent 1px,
       transparent 3px
     );
@@ -161,40 +195,160 @@ body {
   display: block;
 }
 
-/* Base do Gabinete (Footer Estético - sem botões clicáveis de luta) */
-.cabinet-bottom {
-  width: 100%;
-  padding: 12px 16px;
-  background-color: var(--preto-1);
-  border-top: 4px solid var(--verde-py);
+/* ==========================================================================
+   CONTROLES VIRTUAIS NA TELA (ON-SCREEN HUD BUTTONS)
+   Visíveis no canto da tela para Desktop e Mobile
+   ========================================================================== */
+.on-screen-controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 16px 20px;
+}
+
+/* D-PAD no Canto Inferior Esquerdo */
+.virtual-dpad {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(13, 13, 18, 0.65);
+  padding: 6px;
+  border: 1px solid rgba(232, 179, 58, 0.3);
+  backdrop-filter: blur(2px);
+}
+
+.d-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.d-center {
+  width: 32px;
+  height: 32px;
+  background: rgba(26, 26, 36, 0.8);
+  border: 1px solid #38384D;
+}
+
+/* Botões de Ação no Canto Inferior Direito */
+.virtual-actions {
+  pointer-events: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  background: rgba(13, 13, 18, 0.65);
+  padding: 8px 10px;
+  border: 1px solid rgba(232, 179, 58, 0.3);
+  backdrop-filter: blur(2px);
 }
 
-.speaker-grille {
+.action-top-row,
+.action-bottom-row {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 4px;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
-.speaker-grille span {
-  display: block;
-  width: 60px;
-  height: 4px;
-  background-color: #262635;
-  border-bottom: 1px solid #38384D;
+/* Estilo Comum dos Botões Virtuais */
+.v-btn {
+  background: #1A1A24;
+  color: #FFFFFF;
+  border: 2px solid #555566;
+  font-family: monospace;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.08s, filter 0.08s, border-color 0.08s;
+}
+
+.v-btn:active,
+.v-btn.active {
+  transform: scale(0.90) translateY(2px);
+  filter: brightness(1.4);
+}
+
+/* Tamanhos D-Pad */
+.virtual-dpad .v-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  border-color: var(--dourado-2);
+  color: var(--dourado);
+}
+
+/* Botões de Ação Específicos */
+.virtual-actions .v-btn {
+  padding: 6px 10px;
+  min-width: 60px;
+  height: 44px;
+  border-radius: 4px;
+}
+
+.v-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.v-sub {
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+/* Cores de Ação Arcade */
+.btn-punch {
+  background: linear-gradient(180deg, #C8102E 0%, #8B0A1F 100%);
+  border-color: #FF4D4D;
+}
+
+.btn-kick {
+  background: linear-gradient(180deg, #2A5A8B 0%, #153250 100%);
+  border-color: #5AC8FF;
+}
+
+.btn-special {
+  background: linear-gradient(180deg, #A67718 0%, #684807 100%);
+  border-color: var(--dourado);
+  color: var(--dourado);
+}
+
+.btn-block {
+  background: linear-gradient(180deg, #1E6B3A 0%, #0F3A1E 100%);
+  border-color: var(--verde-lima);
+}
+
+.btn-throw {
+  background: linear-gradient(180deg, #6B21A8 0%, #3B0764 100%);
+  border-color: #C084FC;
+}
+
+/* Base do Gabinete */
+.cabinet-bottom {
+  width: 100%;
+  padding: 6px 16px;
+  background-color: var(--preto-1);
+  border-top: 3px solid var(--verde-py);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 }
 
 .controls-legend {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
   font-size: 11px;
-  color: #CCCCCC;
 }
 
 .legend-col {
@@ -208,7 +362,6 @@ body {
   padding: 2px 6px;
   font-weight: bold;
   font-size: 10px;
-  letter-spacing: 1px;
   border: 1px solid #FFFFFF;
 }
 
@@ -229,66 +382,37 @@ body {
   color: #A0A0B2;
 }
 
-.crt-toggle-container {
-  display: flex;
-  justify-content: center;
-}
-
-.crt-toggle-button {
-  background-color: #242433;
-  color: var(--dourado);
-  font-family: monospace;
-  font-size: 10px;
-  font-weight: bold;
-  border: 1px solid var(--dourado-2);
-  padding: 4px 8px;
-  cursor: pointer;
-  letter-spacing: 1px;
-}
-
-.crt-toggle-button:hover {
-  background-color: var(--dourado-2);
-  color: var(--preto-1);
-}
-
-.coin-slots {
-  display: flex;
-  justify-content: center;
-  margin-top: 4px;
-}
-
-.coin-insert {
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  color: var(--verde-lima);
-  text-shadow: 0 0 5px var(--verde-py);
-  animation: pulseCoin 1.5s infinite;
-}
-
-@keyframes pulseCoin {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
-
-/* Responsividade para telas menores que 900px */
-@media (max-width: 900px) {
-  body {
-    padding: 4px;
-  }
-  .arcade-cabinet {
-    border-width: 2px;
-  }
+/* Responsividade Mobile e Telas Pequenas */
+@media (max-width: 768px) {
   .marquee-title {
-    font-size: 20px;
-    letter-spacing: 4px;
+    font-size: 16px;
+    letter-spacing: 3px;
   }
-  .bezel-frame {
-    padding: 8px 6px;
+  .marquee-decor-left,
+  .p2-col {
+    display: none;
   }
-  .controls-legend {
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 10px;
+  .virtual-actions .v-btn {
+    min-width: 50px;
+    height: 38px;
+    padding: 4px 6px;
+  }
+  .v-label {
+    font-size: 9px;
+  }
+  .v-sub {
+    font-size: 7px;
+  }
+  .virtual-dpad .v-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+  .d-center {
+    width: 26px;
+    height: 26px;
+  }
+  .on-screen-controls {
+    padding: 8px 10px;
   }
 }

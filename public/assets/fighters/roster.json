@@ -1,0 +1,78 @@
+{
+  "game": "KUARAHY",
+  "part": "6-10",
+  "frame": [
+    256,
+    240
+  ],
+  "animations": {
+    "idle": 6,
+    "walk_forward": 6,
+    "walk_backward": 6,
+    "crouch": 3,
+    "jump": 4,
+    "light_punch": 3,
+    "heavy_punch": 4,
+    "light_kick": 3,
+    "heavy_kick": 5,
+    "special_1": 8,
+    "special_2": 8,
+    "super_attack": 12,
+    "block": 2,
+    "hit_stun": 4,
+    "victory_pose": 8,
+    "defeat_ko": 7
+  },
+  "fighters": [
+    {
+      "id": "cabanas",
+      "name": "Salvador Cabañas",
+      "title": "El Chava Indomável",
+      "specials": [
+        "Gancho Titânico (rastro sônico)",
+        "Super Armor + Direto",
+        "Bomba do Chava (Super)"
+      ]
+    },
+    {
+      "id": "pombero",
+      "name": "El Pombero",
+      "title": "O Senhor da Selva",
+      "specials": [
+        "Sumiço na Bruma (teleporte)",
+        "Garras da Selva",
+        "Noite Eterna (Super)"
+      ]
+    },
+    {
+      "id": "nanduti",
+      "name": "La Tejedora de Ñandutí",
+      "title": "A Dama das Teias",
+      "specials": [
+        "Teia Guillotina",
+        "Chicotada de Agulhas",
+        "Casulo de Fios (Super)"
+      ]
+    },
+    {
+      "id": "terere_master",
+      "name": "El Maestro del Tereré",
+      "title": "O Ancião das Ervas",
+      "specials": [
+        "Canhão Criogênico",
+        "Chuva de Pohã",
+        "Tornado de Erva-Mate (Super)"
+      ]
+    },
+    {
+      "id": "itaipu_colossus",
+      "name": "Itaipu Colossus",
+      "title": "O Colosso Eletro-Hidráulico",
+      "specials": [
+        "Vertedouro Devastador (500kV)",
+        "Sucção da Turbina",
+        "Pisada Sísmica (Super)"
+      ]
+    }
+  ]
+}

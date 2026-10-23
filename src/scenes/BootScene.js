@@ -14,6 +14,32 @@ export default class BootScene extends Phaser.Scene {
     // Carregar os dados de framedata e atributos dos lutadores
     this.load.json('fightersData', '/src/data/fighters.json');
 
+    // Lista dos 5 lutadores com assets completos
+    const activeFightersWithAssets = ['cabanas', 'pombero', 'nanduti', 'terere_master', 'itaipu_colossus'];
+    this.registry.set('activeFightersWithAssets', activeFightersWithAssets);
+
+    const animList = [
+      'idle', 'walk_forward', 'walk_backward', 'crouch', 'jump',
+      'light_punch', 'heavy_punch', 'light_kick', 'heavy_kick',
+      'special_1', 'special_2', 'super_attack', 'block', 'hit_stun',
+      'victory_pose', 'defeat_ko',
+    ];
+
+    activeFightersWithAssets.forEach((id) => {
+      ['p1', 'p2'].forEach((pal) => {
+        // Carregar Portraits P1 e P2
+        this.load.image(`portrait_${id}_${pal}`, `/assets/fighters/${id}/${id}_${pal}_portrait.png`);
+
+        // Carregar cada tira de animação (256x240 por frame)
+        animList.forEach((animKey) => {
+          this.load.spritesheet(`${id}_${pal}_${animKey}`, `/assets/fighters/${id}/${pal}/${animKey}.png`, {
+            frameWidth: 256,
+            frameHeight: 240,
+          });
+        });
+      });
+    });
+
     // Barra de progresso de inicialização
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
@@ -56,12 +82,56 @@ export default class BootScene extends Phaser.Scene {
     const fightersData = this.cache.json.get('fightersData');
     this.registry.set('fightersData', fightersData);
 
-    // Gerar texturas geométricas base para lutadores e partículas caso necessário
+    // Gerar animações dos lutadores a partir dos spritesheets
+    this.createFighterAnimations();
+
+    // Gerar texturas geométricas base para partículas caso necessário
     this.createPlaceholderTextures();
 
     // Transição suave para a cena de título
     this.time.delayedCall(300, () => {
       this.scene.start('TitleScene');
+    });
+  }
+
+  createFighterAnimations() {
+    const activeFighters = ['cabanas', 'pombero', 'nanduti', 'terere_master', 'itaipu_colossus'];
+    const animConfig = [
+      { key: 'idle', fps: 10, loop: true },
+      { key: 'walk_forward', fps: 14, loop: true },
+      { key: 'walk_backward', fps: 14, loop: true },
+      { key: 'crouch', fps: 10, loop: true },
+      { key: 'jump', fps: 10, loop: false },
+      { key: 'light_punch', fps: 14, loop: false },
+      { key: 'heavy_punch', fps: 14, loop: false },
+      { key: 'light_kick', fps: 14, loop: false },
+      { key: 'heavy_kick', fps: 14, loop: false },
+      { key: 'special_1', fps: 14, loop: false },
+      { key: 'special_2', fps: 14, loop: false },
+      { key: 'super_attack', fps: 14, loop: false },
+      { key: 'block', fps: 10, loop: true },
+      { key: 'hit_stun', fps: 12, loop: false },
+      { key: 'victory_pose', fps: 10, loop: true },
+      { key: 'defeat_ko', fps: 10, loop: false },
+    ];
+
+    activeFighters.forEach((fighterId) => {
+      ['p1', 'p2'].forEach((palette) => {
+        animConfig.forEach((anim) => {
+          const textureKey = `${fighterId}_${palette}_${anim.key}`;
+          if (this.textures.exists(textureKey)) {
+            if (this.anims.exists(textureKey)) {
+              this.anims.remove(textureKey);
+            }
+            this.anims.create({
+              key: textureKey,
+              frames: this.anims.generateFrameNumbers(textureKey),
+              frameRate: anim.fps,
+              repeat: anim.loop ? -1 : 0,
+            });
+          }
+        });
+      });
     });
   }
 
