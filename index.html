@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KUARAHY — 2D Arcade Fighting Game</title>
+    <meta name="description" content="Jogo de luta arcade 2D em pixel art com tema paraguaio e combate técnico." />
+    <meta property="og:title" content="KUARAHY — 2D Arcade Fighting Game" />
+    <meta property="og:description" content="Jogo de luta arcade 2D em pixel art com tema paraguaio." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Folhas de estilo da moldura do gabinete e HUD -->
+    <link rel="stylesheet" href="/css/cabinet.css" />
+    <link rel="stylesheet" href="/css/hud.css" />
+    <!-- Phaser 3 via CDN com fallback nativo -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
+  </head>
+  <body>
+    <!-- Estrutura do Gabinete de Fliperama Arcade (Visual e Estético Puro) -->
+    <div class="arcade-cabinet">
+      <!-- Marquise Superior / Marquee -->
+      <header class="cabinet-marquee">
+        <div class="marquee-decor-left">◆ ◆ ◆</div>
+        <h1 class="marquee-title">KUARAHY</h1>
+        <div class="marquee-decor-right">◆ ◆ ◆</div>
+      </header>
+
+      <!-- Moldura da Tela / CRT Bezel -->
+      <main class="bezel-frame">
+        <div class="bezel-inner">
+          <!-- Canvas do Jogo injetado pelo Phaser -->
+          <div id="game-container" class="game-container"></div>
+          
+          <!-- Filtro CRT Scanlines opcional via CSS -->
+          <div id="crt-overlay" class="crt-overlay active"></div>
+        </div>
+      </main>
+
+      <!-- Painel Inferior de Instruções e Decoração Estética (sem botões interativos de jogo) -->
+      <footer class="cabinet-bottom">
+        <div class="speaker-grille">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="controls-legend">
+          <div class="legend-col">
+            <span class="legend-badge p1">P1</span>
+            <span class="legend-text">W/A/S/D • J:Soco • K:Chute • L:Esp • U:Agarrão • I:Defesa/Contra</span>
+          </div>
+          <div class="crt-toggle-container">
+            <button id="toggle-crt-btn" type="button" class="crt-toggle-button" onclick="document.getElementById('crt-overlay').classList.toggle('active')">
+              SCANLINES CRT: ON/OFF
+            </button>
+          </div>
+          <div class="legend-col">
+            <span class="legend-badge p2">P2</span>
+            <span class="legend-text">Setas • Num1:Soco • Num2:Chute • Num3:Esp • Num4:Agarrão • Num5:Defesa</span>
+          </div>
+        </div>
+        <div class="coin-slots">
+          <div class="coin-insert">INSERT COIN [1P / 2P]</div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Inicializador principal do jogo -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

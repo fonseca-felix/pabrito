@@ -1,0 +1,6 @@
+{
+  "name": "KUARAHY - 2D Arcade Fighting Game",
+  "description": "Arcade 2D pixel art fighting game set in Paraguay with 6 fighters, responsive combat, special moves, parry counter, and arcade cabinet aesthetics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

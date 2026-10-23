@@ -1,0 +1,191 @@
+/* ==========================================================================
+   KUARAHY — Estilos de HUD (Barras de Vida, Energia, Timer, Rounds)
+   Regras: pixel art, bordas sólidas 2px, sem border-radius, sem blur.
+   ========================================================================== */
+
+/* Classes de apoio para overlays e elementos HTML de interface de combate */
+
+.fight-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  font-family: monospace, 'Courier New', Courier;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  image-rendering: pixelated;
+}
+
+.hud-top-bar {
+  display: grid;
+  grid-template-columns: 1fr 90px 1fr;
+  align-items: start;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Painel de Lutador (P1 à esquerda, P2 à direita) */
+.hud-fighter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hud-fighter-panel.p2 {
+  align-items: flex-end;
+}
+
+.hud-fighter-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.hud-fighter-panel.p2 .hud-fighter-meta {
+  flex-direction: row-reverse;
+}
+
+.fighter-name-label {
+  color: #FFFFFF;
+  text-shadow: 1px 1px 0 #000000;
+  text-transform: uppercase;
+}
+
+/* Indicadores de Rounds Ganhos */
+.round-indicators {
+  display: flex;
+  gap: 4px;
+}
+
+.round-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #22222E;
+  border: 2px solid var(--dourado-2);
+}
+
+.round-dot.won {
+  background-color: var(--vermelho-py);
+  border-color: var(--dourado);
+}
+
+/* Barra de Vida */
+.health-bar-container {
+  width: 100%;
+  height: 22px;
+  background-color: var(--preto-1);
+  border: 2px solid #555566;
+  position: relative;
+  overflow: hidden;
+}
+
+.health-bar-red-lag {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: var(--vermelho-2);
+  transition: width 0.3s steps(5);
+}
+
+.health-bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: var(--verde-py-2);
+  transition: width 0.05s linear;
+}
+
+/* Transição de cores da vida por % */
+.health-bar-fill.high {
+  background-color: var(--verde-py-2);
+  border-right: 2px solid var(--verde-lima);
+}
+
+.health-bar-fill.medium {
+  background-color: #D4A017;
+  border-right: 2px solid #FFE066;
+}
+
+.health-bar-fill.low {
+  background-color: var(--vermelho-py);
+  border-right: 2px solid #FF6B6B;
+}
+
+/* Para o P2, o preenchimento vem da direita para a esquerda */
+.hud-fighter-panel.p2 .health-bar-fill,
+.hud-fighter-panel.p2 .health-bar-red-lag {
+  right: 0;
+  left: auto;
+}
+.hud-fighter-panel.p1 .health-bar-fill,
+.hud-fighter-panel.p1 .health-bar-red-lag {
+  left: 0;
+  right: auto;
+}
+
+/* Timer Central */
+.hud-timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--preto-1);
+  border: 2px solid var(--dourado);
+  padding: 4px 8px;
+}
+
+.hud-timer-value {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--dourado);
+  text-shadow: 2px 2px 0 var(--vermelho-2);
+  line-height: 1;
+}
+
+.hud-timer-label {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #A0A0B2;
+}
+
+/* Barras de Energia / Super Meter */
+.hud-meter-container {
+  width: 75%;
+  height: 12px;
+  background-color: var(--preto-1);
+  border: 2px solid #333344;
+  position: relative;
+  margin-top: 2px;
+}
+
+.hud-meter-fill {
+  height: 100%;
+  background-color: var(--dourado-2);
+  border-right: 2px solid var(--dourado);
+}
+
+.hud-meter-fill.max {
+  background-color: var(--dourado);
+  animation: meterBlink 0.4s infinite alternate steps(2);
+}
+
+@keyframes meterBlink {
+  0% { background-color: var(--dourado); }
+  100% { background-color: #FFF2A3; }
+}
+
+/* Indicador de Combo */
+.combo-display {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--vermelho-py);
+  text-shadow: 2px 2px 0 var(--preto-1), -1px -1px 0 var(--dourado);
+  letter-spacing: 2px;
+}

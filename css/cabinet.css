@@ -1,0 +1,294 @@
+/* ==========================================================================
+   KUARAHY — Paleta Oficial & Estilos do Gabinete de Fliperama (Cabinet)
+   Estilo visual: Neo Geo / SNK (Garou, KOF '98) — pixel art sem anti-aliasing
+   ========================================================================== */
+
+:root {
+  --preto-1: #0D0D12;
+  --preto-2: #1A1A24;
+  --pele-clara: #F2C29B;
+  --pele-sombra: #C98B62;
+  --verde-py: #1E6B3A;
+  --verde-py-2: #2E8B57;
+  --verde-lima: #7FBF4F;
+  --vermelho-py: #C8102E;
+  --vermelho-2: #8B0A1F;
+  --azul-ceu: #4A90C2;
+  --azul-2: #2A5A8B;
+  --dourado: #E8B33A;
+  --dourado-2: #A67718;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--preto-1);
+  color: #FFFFFF;
+  font-family: 'Courier New', Courier, monospace;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 12px;
+  background: radial-gradient(circle at center, #1A1A24 0%, #0D0D12 100%);
+}
+
+/* Moldura Central do Gabinete */
+.arcade-cabinet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1040px;
+  background-color: var(--preto-2);
+  border: 4px solid var(--dourado-2);
+  outline: 2px solid var(--preto-1);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+/* Marquise Superior (Marquee) */
+.cabinet-marquee {
+  width: 100%;
+  padding: 10px 24px;
+  background-color: var(--vermelho-2);
+  border-bottom: 4px solid var(--dourado);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.marquee-title {
+  font-family: monospace, 'Courier New', Courier;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  color: var(--dourado);
+  text-shadow: 3px 3px 0 var(--vermelho-py), -2px -2px 0 var(--preto-1);
+  text-transform: uppercase;
+}
+
+.marquee-decor-left,
+.marquee-decor-right {
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--azul-ceu);
+}
+
+/* Bezel (Moldura que envolve o monitor CRT) */
+.bezel-frame {
+  width: 100%;
+  padding: 16px 20px;
+  background-color: #121219;
+  border-top: 4px solid var(--preto-1);
+  border-bottom: 4px solid var(--preto-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bezel-inner {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  background-color: #000000;
+  border: 4px solid #2B2B36;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container de Canvas do Phaser */
+.game-container {
+  width: 100%;
+  aspect-ratio: 960 / 540;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+}
+
+.game-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 960px;
+  max-height: 540px;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Overlay Estético de Scanlines CRT (Linhas de Varredura e Vinheta) */
+.crt-overlay {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.5) 100%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.28) 0px,
+      rgba(0, 0, 0, 0.28) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  z-index: 10;
+}
+
+.crt-overlay.active {
+  display: block;
+}
+
+/* Base do Gabinete (Footer Estético - sem botões clicáveis de luta) */
+.cabinet-bottom {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--preto-1);
+  border-top: 4px solid var(--verde-py);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.speaker-grille {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.speaker-grille span {
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: #262635;
+  border-bottom: 1px solid #38384D;
+}
+
+.controls-legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 11px;
+  color: #CCCCCC;
+}
+
+.legend-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  font-weight: bold;
+  font-size: 10px;
+  letter-spacing: 1px;
+  border: 1px solid #FFFFFF;
+}
+
+.legend-badge.p1 {
+  background-color: var(--azul-2);
+  color: #FFFFFF;
+  border-color: var(--azul-ceu);
+}
+
+.legend-badge.p2 {
+  background-color: var(--vermelho-2);
+  color: #FFFFFF;
+  border-color: var(--vermelho-py);
+}
+
+.legend-text {
+  font-family: monospace;
+  color: #A0A0B2;
+}
+
+.crt-toggle-container {
+  display: flex;
+  justify-content: center;
+}
+
+.crt-toggle-button {
+  background-color: #242433;
+  color: var(--dourado);
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: bold;
+  border: 1px solid var(--dourado-2);
+  padding: 4px 8px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.crt-toggle-button:hover {
+  background-color: var(--dourado-2);
+  color: var(--preto-1);
+}
+
+.coin-slots {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.coin-insert {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: var(--verde-lima);
+  text-shadow: 0 0 5px var(--verde-py);
+  animation: pulseCoin 1.5s infinite;
+}
+
+@keyframes pulseCoin {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Responsividade para telas menores que 900px */
+@media (max-width: 900px) {
+  body {
+    padding: 4px;
+  }
+  .arcade-cabinet {
+    border-width: 2px;
+  }
+  .marquee-title {
+    font-size: 20px;
+    letter-spacing: 4px;
+  }
+  .bezel-frame {
+    padding: 8px 6px;
+  }
+  .controls-legend {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 10px;
+  }
+}

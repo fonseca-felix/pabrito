@@ -1,0 +1,549 @@
+[
+  {
+    "id": "terere",
+    "name": "Tereré",
+    "archetype": "all-rounder",
+    "color": "#2E8B57",
+    "stats": { "damage": 3, "speed": 3, "defense": 3, "range": 3 },
+    "normals": {
+      "light_punch": {
+        "startup": 4, "active": 3, "recovery": 7, "damage": 4, "hitstun": 12, "blockstun": 8,
+        "hitbox": { "x": 36, "y": -8, "w": 28, "h": 16 },
+        "cancelInto": ["heavy_punch", "special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "heavy_punch": {
+        "startup": 8, "active": 4, "recovery": 14, "damage": 10, "hitstun": 18, "blockstun": 12,
+        "hitbox": { "x": 44, "y": -10, "w": 36, "h": 20 },
+        "cancelInto": ["special_1", "special_2"],
+        "meterGain": { "onHit": 10, "onBlock": 5, "onWhiff": 0 },
+        "sfx": "punch_heavy"
+      },
+      "light_kick": {
+        "startup": 6, "active": 3, "recovery": 9, "damage": 6, "hitstun": 14, "blockstun": 9,
+        "hitbox": { "x": 40, "y": -4, "w": 34, "h": 18 },
+        "cancelInto": ["heavy_kick", "special_2"],
+        "meterGain": { "onHit": 7, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      },
+      "heavy_kick": {
+        "startup": 10, "active": 5, "recovery": 16, "damage": 14, "hitstun": 20, "blockstun": 14,
+        "hitbox": { "x": 46, "y": -6, "w": 40, "h": 22 },
+        "cancelInto": ["special_2"],
+        "meterGain": { "onHit": 12, "onBlock": 6, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      },
+      "crouch_attack": {
+        "startup": 5, "active": 3, "recovery": 10, "damage": 5, "hitstun": 13, "blockstun": 8,
+        "hitbox": { "x": 34, "y": -20, "w": 30, "h": 16 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "air_attack": {
+        "startup": 5, "active": 6, "recovery": 8, "damage": 8, "hitstun": 16, "blockstun": 10,
+        "hitbox": { "x": 38, "y": -6, "w": 32, "h": 24 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 8, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      }
+    },
+    "specials": {
+      "special_1": {
+        "id": "terere_jato_gelado",
+        "name": "Jato Gelado",
+        "input": "↓→+Soco",
+        "startup": 12, "active": 4, "recovery": 20, "damage": 12, "hitstun": 18, "blockstun": 12,
+        "chipPercent": 0.15, "pushback": 30,
+        "hitbox": { "x": 55, "y": -12, "w": 48, "h": 22 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 15, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 90,
+        "sfx": "special_ice"
+      },
+      "special_2": {
+        "id": "terere_giro_guampa",
+        "name": "Giro de Guampa",
+        "input": "→↓+Chute",
+        "startup": 10, "active": 8, "recovery": 22, "damage": 14, "hitstun": 20, "blockstun": 14,
+        "chipPercent": 0.15, "pushback": 20,
+        "hitbox": { "x": 42, "y": -15, "w": 44, "h": 36 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 15, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 120,
+        "sfx": "special_spin"
+      }
+    },
+    "super": {
+      "id": "terere_turbo",
+      "name": "Refresco Total",
+      "input": "↓→↓→+Especial",
+      "cost": 100,
+      "durationFrames": 180,
+      "effect": "recovery×0.5 nos golpes normais",
+      "sfx": "super_activate"
+    },
+    "combos": [
+      "light_punch → light_punch → heavy_kick",
+      "light_punch → special_1",
+      "crouch_attack → special_1"
+    ]
+  },
+  {
+    "id": "harpa",
+    "name": "Harpa",
+    "archetype": "zoner",
+    "color": "#4A90C2",
+    "stats": { "damage": 3, "speed": 3, "defense": 2, "range": 5 },
+    "normals": {
+      "light_punch": {
+        "startup": 5, "active": 3, "recovery": 8, "damage": 4, "hitstun": 12, "blockstun": 8,
+        "hitbox": { "x": 42, "y": -8, "w": 32, "h": 14 },
+        "cancelInto": ["heavy_punch", "special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "heavy_punch": {
+        "startup": 9, "active": 4, "recovery": 16, "damage": 9, "hitstun": 17, "blockstun": 11,
+        "hitbox": { "x": 58, "y": -10, "w": 45, "h": 18 },
+        "cancelInto": ["special_1", "special_2"],
+        "meterGain": { "onHit": 10, "onBlock": 5, "onWhiff": 0 },
+        "sfx": "punch_heavy"
+      },
+      "light_kick": {
+        "startup": 6, "active": 3, "recovery": 10, "damage": 5, "hitstun": 13, "blockstun": 8,
+        "hitbox": { "x": 44, "y": -4, "w": 36, "h": 16 },
+        "cancelInto": ["heavy_kick"],
+        "meterGain": { "onHit": 7, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      },
+      "heavy_kick": {
+        "startup": 11, "active": 4, "recovery": 18, "damage": 12, "hitstun": 19, "blockstun": 13,
+        "hitbox": { "x": 52, "y": -6, "w": 42, "h": 20 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 12, "onBlock": 6, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      },
+      "crouch_attack": {
+        "startup": 6, "active": 3, "recovery": 11, "damage": 5, "hitstun": 12, "blockstun": 8,
+        "hitbox": { "x": 40, "y": -18, "w": 35, "h": 16 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "air_attack": {
+        "startup": 5, "active": 5, "recovery": 9, "damage": 7, "hitstun": 15, "blockstun": 9,
+        "hitbox": { "x": 40, "y": -6, "w": 36, "h": 22 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 8, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      }
+    },
+    "specials": {
+      "special_1": {
+        "id": "harpa_acorde_risonho",
+        "name": "Onda Harmônica",
+        "input": "↓→+Soco",
+        "startup": 13, "active": 6, "recovery": 24, "damage": 11, "hitstun": 17, "blockstun": 11,
+        "chipPercent": 0.20, "pushback": 35,
+        "hitbox": { "x": 75, "y": -12, "w": 60, "h": 24 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 16, "onBlock": 8, "onWhiff": 6 },
+        "cooldownFrames": 100,
+        "sfx": "special_ice"
+      },
+      "special_2": {
+        "id": "harpa_cordas_tensas",
+        "name": "Repique de Corda",
+        "input": "→↓+Chute",
+        "startup": 11, "active": 5, "recovery": 21, "damage": 13, "hitstun": 19, "blockstun": 13,
+        "chipPercent": 0.15, "pushback": 25,
+        "hitbox": { "x": 52, "y": -20, "w": 48, "h": 32 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 15, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 110,
+        "sfx": "special_spin"
+      }
+    },
+    "super": {
+      "id": "harpa_sinfonia",
+      "name": "Crescendo Guarania",
+      "input": "↓→↓→+Especial",
+      "cost": 100,
+      "durationFrames": 200,
+      "effect": "Projéteis com dobro de velocidade e alcance",
+      "sfx": "super_activate"
+    },
+    "combos": [
+      "light_punch → heavy_punch → special_1",
+      "crouch_attack → special_1",
+      "light_kick → heavy_kick"
+    ]
+  },
+  {
+    "id": "chaco",
+    "name": "Chaco",
+    "archetype": "tanque",
+    "color": "#8B0A1F",
+    "stats": { "damage": 5, "speed": 1, "defense": 5, "range": 3 },
+    "normals": {
+      "light_punch": {
+        "startup": 6, "active": 4, "recovery": 9, "damage": 6, "hitstun": 14, "blockstun": 9,
+        "hitbox": { "x": 38, "y": -8, "w": 30, "h": 20 },
+        "cancelInto": ["heavy_punch", "special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "heavy_punch": {
+        "startup": 11, "active": 5, "recovery": 18, "damage": 14, "hitstun": 22, "blockstun": 15,
+        "hitbox": { "x": 48, "y": -10, "w": 40, "h": 26 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 12, "onBlock": 6, "onWhiff": 0 },
+        "sfx": "punch_heavy"
+      },
+      "light_kick": {
+        "startup": 7, "active": 4, "recovery": 11, "damage": 8, "hitstun": 15, "blockstun": 10,
+        "hitbox": { "x": 42, "y": -4, "w": 34, "h": 20 },
+        "cancelInto": ["heavy_kick"],
+        "meterGain": { "onHit": 7, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      },
+      "heavy_kick": {
+        "startup": 13, "active": 6, "recovery": 22, "damage": 18, "hitstun": 24, "blockstun": 16,
+        "hitbox": { "x": 50, "y": -6, "w": 44, "h": 26 },
+        "cancelInto": ["special_2"],
+        "meterGain": { "onHit": 14, "onBlock": 7, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      },
+      "crouch_attack": {
+        "startup": 7, "active": 4, "recovery": 13, "damage": 7, "hitstun": 15, "blockstun": 10,
+        "hitbox": { "x": 36, "y": -20, "w": 34, "h": 18 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 7, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "air_attack": {
+        "startup": 7, "active": 6, "recovery": 12, "damage": 11, "hitstun": 18, "blockstun": 12,
+        "hitbox": { "x": 42, "y": -6, "w": 38, "h": 28 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 9, "onBlock": 5, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      }
+    },
+    "specials": {
+      "special_1": {
+        "id": "chaco_investida_quebracho",
+        "name": "Investida Quebracho",
+        "input": "↓→+Soco",
+        "startup": 14, "active": 8, "recovery": 24, "damage": 16, "hitstun": 22, "blockstun": 14,
+        "chipPercent": 0.20, "pushback": 40,
+        "armor": 1,
+        "hitbox": { "x": 48, "y": -12, "w": 50, "h": 32 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 15, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 130,
+        "sfx": "punch_heavy"
+      },
+      "special_2": {
+        "id": "chaco_martelo_arido",
+        "name": "Martelo Árido",
+        "input": "→↓+Chute",
+        "startup": 15, "active": 6, "recovery": 26, "damage": 18, "hitstun": 25, "blockstun": 16,
+        "chipPercent": 0.20, "pushback": 30,
+        "hitbox": { "x": 44, "y": -16, "w": 46, "h": 38 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 16, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 140,
+        "sfx": "special_spin"
+      }
+    },
+    "super": {
+      "id": "chaco_fortaleza",
+      "name": "Baluarte Espinhoso",
+      "input": "↓→↓→+Especial",
+      "cost": 100,
+      "durationFrames": 240,
+      "effect": "Armadura passiva contra 1 acerto leve e redução de 30% no dano recebido",
+      "sfx": "super_activate"
+    },
+    "combos": [
+      "light_punch → heavy_punch → special_1",
+      "light_kick → special_1",
+      "heavy_punch → special_2"
+    ]
+  },
+  {
+    "id": "nanduti",
+    "name": "Ñandutí",
+    "archetype": "rushdown",
+    "color": "#E8B33A",
+    "stats": { "damage": 2, "speed": 5, "defense": 2, "range": 4 },
+    "normals": {
+      "light_punch": {
+        "startup": 4, "active": 2, "recovery": 6, "damage": 3, "hitstun": 11, "blockstun": 7,
+        "hitbox": { "x": 34, "y": -8, "w": 26, "h": 14 },
+        "cancelInto": ["heavy_punch", "light_kick", "special_1"],
+        "meterGain": { "onHit": 5, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "heavy_punch": {
+        "startup": 7, "active": 3, "recovery": 12, "damage": 7, "hitstun": 16, "blockstun": 10,
+        "hitbox": { "x": 42, "y": -10, "w": 34, "h": 18 },
+        "cancelInto": ["special_1", "special_2"],
+        "meterGain": { "onHit": 8, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "punch_heavy"
+      },
+      "light_kick": {
+        "startup": 5, "active": 3, "recovery": 7, "damage": 4, "hitstun": 13, "blockstun": 8,
+        "hitbox": { "x": 38, "y": -4, "w": 32, "h": 16 },
+        "cancelInto": ["heavy_kick", "special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "kick_light"
+      },
+      "heavy_kick": {
+        "startup": 8, "active": 4, "recovery": 14, "damage": 9, "hitstun": 17, "blockstun": 12,
+        "hitbox": { "x": 44, "y": -6, "w": 38, "h": 20 },
+        "cancelInto": ["special_2"],
+        "meterGain": { "onHit": 10, "onBlock": 5, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      },
+      "crouch_attack": {
+        "startup": 4, "active": 3, "recovery": 8, "damage": 4, "hitstun": 12, "blockstun": 7,
+        "hitbox": { "x": 32, "y": -20, "w": 28, "h": 14 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 5, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "air_attack": {
+        "startup": 4, "active": 5, "recovery": 7, "damage": 6, "hitstun": 14, "blockstun": 9,
+        "hitbox": { "x": 36, "y": -6, "w": 30, "h": 22 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 7, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      }
+    },
+    "specials": {
+      "special_1": {
+        "id": "nanduti_fio_veloz",
+        "name": "Bordado Veloz",
+        "input": "↓→+Soco",
+        "startup": 9, "active": 5, "recovery": 17, "damage": 9, "hitstun": 16, "blockstun": 10,
+        "chipPercent": 0.12, "pushback": 18,
+        "hitbox": { "x": 45, "y": -10, "w": 42, "h": 24 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 14, "onBlock": 7, "onWhiff": 4 },
+        "cooldownFrames": 80,
+        "sfx": "special_spin"
+      },
+      "special_2": {
+        "id": "nanduti_salto_teia",
+        "name": "Pique Itauguá",
+        "input": "→↓+Chute",
+        "startup": 8, "active": 6, "recovery": 19, "damage": 11, "hitstun": 18, "blockstun": 12,
+        "chipPercent": 0.15, "pushback": 22,
+        "hitbox": { "x": 40, "y": -16, "w": 40, "h": 32 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 14, "onBlock": 7, "onWhiff": 4 },
+        "cooldownFrames": 95,
+        "sfx": "kick_heavy"
+      }
+    },
+    "super": {
+      "id": "nanduti_trama_dourada",
+      "name": "Trama de Ouro",
+      "input": "↓→↓→+Especial",
+      "cost": 100,
+      "durationFrames": 160,
+      "effect": "Velocidade de movimento dobrada e cancelamentos estendidos",
+      "sfx": "super_activate"
+    },
+    "combos": [
+      "light_punch → light_kick → heavy_punch → special_1",
+      "crouch_attack → light_punch → special_2",
+      "light_punch → heavy_kick → special_1"
+    ]
+  },
+  {
+    "id": "itaipu",
+    "name": "Itaipu",
+    "archetype": "pesado",
+    "color": "#2A5A8B",
+    "stats": { "damage": 5, "speed": 2, "defense": 4, "range": 3 },
+    "normals": {
+      "light_punch": {
+        "startup": 5, "active": 3, "recovery": 8, "damage": 5, "hitstun": 13, "blockstun": 8,
+        "hitbox": { "x": 38, "y": -8, "w": 30, "h": 18 },
+        "cancelInto": ["heavy_punch", "special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "heavy_punch": {
+        "startup": 10, "active": 4, "recovery": 17, "damage": 13, "hitstun": 21, "blockstun": 14,
+        "hitbox": { "x": 48, "y": -10, "w": 42, "h": 24 },
+        "cancelInto": ["special_1", "special_2"],
+        "meterGain": { "onHit": 11, "onBlock": 6, "onWhiff": 0 },
+        "sfx": "punch_heavy"
+      },
+      "light_kick": {
+        "startup": 6, "active": 3, "recovery": 10, "damage": 6, "hitstun": 14, "blockstun": 9,
+        "hitbox": { "x": 40, "y": -4, "w": 34, "h": 18 },
+        "cancelInto": ["heavy_kick"],
+        "meterGain": { "onHit": 7, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      },
+      "heavy_kick": {
+        "startup": 11, "active": 5, "recovery": 19, "damage": 15, "hitstun": 22, "blockstun": 15,
+        "hitbox": { "x": 48, "y": -6, "w": 42, "h": 24 },
+        "cancelInto": ["special_2"],
+        "meterGain": { "onHit": 12, "onBlock": 6, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      },
+      "crouch_attack": {
+        "startup": 6, "active": 3, "recovery": 11, "damage": 6, "hitstun": 13, "blockstun": 9,
+        "hitbox": { "x": 35, "y": -20, "w": 32, "h": 16 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "air_attack": {
+        "startup": 6, "active": 5, "recovery": 10, "damage": 9, "hitstun": 16, "blockstun": 11,
+        "hitbox": { "x": 40, "y": -6, "w": 34, "h": 26 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 8, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      }
+    },
+    "specials": {
+      "special_1": {
+        "id": "itaipu_descarga_hidro",
+        "name": "Descarga Hidroelétrica",
+        "input": "↓→+Soco",
+        "startup": 13, "active": 5, "recovery": 22, "damage": 14, "hitstun": 19, "blockstun": 13,
+        "chipPercent": 0.20, "pushback": 32,
+        "hitbox": { "x": 62, "y": -12, "w": 52, "h": 28 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 15, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 110,
+        "sfx": "special_ice"
+      },
+      "special_2": {
+        "id": "itaipu_turbina_impacto",
+        "name": "Impacto de Turbina",
+        "input": "→↓+Chute",
+        "startup": 12, "active": 7, "recovery": 23, "damage": 16, "hitstun": 21, "blockstun": 15,
+        "chipPercent": 0.18, "pushback": 26,
+        "hitbox": { "x": 45, "y": -15, "w": 46, "h": 34 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 16, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 125,
+        "sfx": "special_spin"
+      }
+    },
+    "super": {
+      "id": "itaipu_sobrecarga",
+      "name": "Sobrecarga de Barragem",
+      "input": "↓→↓→+Especial",
+      "cost": 100,
+      "durationFrames": 200,
+      "effect": "Todos os golpes causam dano elétrico adicional de 25%",
+      "sfx": "super_activate"
+    },
+    "combos": [
+      "light_punch → heavy_punch → special_1",
+      "light_kick → special_2",
+      "crouch_attack → special_1"
+    ]
+  },
+  {
+    "id": "guarani",
+    "name": "Guarani",
+    "archetype": "tecnico",
+    "color": "#1E6B3A",
+    "stats": { "damage": 4, "speed": 3, "defense": 4, "range": 3 },
+    "normals": {
+      "light_punch": {
+        "startup": 4, "active": 3, "recovery": 7, "damage": 5, "hitstun": 13, "blockstun": 8,
+        "hitbox": { "x": 36, "y": -8, "w": 28, "h": 16 },
+        "cancelInto": ["heavy_punch", "special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "heavy_punch": {
+        "startup": 8, "active": 4, "recovery": 15, "damage": 11, "hitstun": 18, "blockstun": 12,
+        "hitbox": { "x": 45, "y": -10, "w": 38, "h": 22 },
+        "cancelInto": ["special_1", "special_2"],
+        "meterGain": { "onHit": 10, "onBlock": 5, "onWhiff": 0 },
+        "sfx": "punch_heavy"
+      },
+      "light_kick": {
+        "startup": 5, "active": 3, "recovery": 8, "damage": 6, "hitstun": 14, "blockstun": 9,
+        "hitbox": { "x": 40, "y": -4, "w": 34, "h": 18 },
+        "cancelInto": ["heavy_kick", "special_2"],
+        "meterGain": { "onHit": 7, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      },
+      "heavy_kick": {
+        "startup": 9, "active": 4, "recovery": 16, "damage": 13, "hitstun": 20, "blockstun": 13,
+        "hitbox": { "x": 46, "y": -6, "w": 40, "h": 22 },
+        "cancelInto": ["special_2"],
+        "meterGain": { "onHit": 12, "onBlock": 6, "onWhiff": 0 },
+        "sfx": "kick_heavy"
+      },
+      "crouch_attack": {
+        "startup": 5, "active": 3, "recovery": 10, "damage": 5, "hitstun": 13, "blockstun": 8,
+        "hitbox": { "x": 34, "y": -20, "w": 30, "h": 16 },
+        "cancelInto": ["special_1"],
+        "meterGain": { "onHit": 6, "onBlock": 3, "onWhiff": 0 },
+        "sfx": "punch_light"
+      },
+      "air_attack": {
+        "startup": 5, "active": 5, "recovery": 8, "damage": 8, "hitstun": 16, "blockstun": 10,
+        "hitbox": { "x": 38, "y": -6, "w": 32, "h": 24 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 8, "onBlock": 4, "onWhiff": 0 },
+        "sfx": "kick_light"
+      }
+    },
+    "specials": {
+      "special_1": {
+        "id": "guarani_golpe_preciso",
+        "name": "Direto de Defesa",
+        "input": "↓→+Soco",
+        "startup": 10, "active": 4, "recovery": 18, "damage": 13, "hitstun": 18, "blockstun": 12,
+        "chipPercent": 0.15, "pushback": 26,
+        "hitbox": { "x": 48, "y": -10, "w": 42, "h": 22 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 15, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 85,
+        "sfx": "punch_heavy"
+      },
+      "special_2": {
+        "id": "guarani_rasteira_agil",
+        "name": "Esquiva e Rasteira",
+        "input": "→↓+Chute",
+        "startup": 11, "active": 6, "recovery": 20, "damage": 12, "hitstun": 20, "blockstun": 13,
+        "chipPercent": 0.15, "pushback": 22,
+        "hitbox": { "x": 44, "y": -14, "w": 42, "h": 26 },
+        "cancelInto": [],
+        "meterGain": { "onHit": 15, "onBlock": 8, "onWhiff": 5 },
+        "cooldownFrames": 95,
+        "sfx": "kick_heavy"
+      }
+    },
+    "super": {
+      "id": "guarani_resistencia_ferrea",
+      "name": "Resistência Férrea",
+      "input": "↓→↓→+Especial",
+      "cost": 100,
+      "durationFrames": 220,
+      "effect": "Postura atlética com armadura para absorver 1 impacto sem recuar",
+      "sfx": "super_activate"
+    },
+    "combos": [
+      "light_punch → heavy_punch → special_1",
+      "light_kick → heavy_kick → special_2",
+      "crouch_attack → special_1"
+    ]
+  }
+]
