@@ -309,7 +309,6 @@ export default class CharSelectScene extends Phaser.Scene {
       this.p2Name.setText(isMirror ? `${f2.name.toUpperCase()} (P2 ALT)` : f2.name.toUpperCase());
       this.p2Title.setText(isMirror ? 'PALETA ESPELHO (COR 2)' : (f2.title || f2.archetype).toUpperCase());
 
-      const isMirror = this.p1Index === this.p2Index;
       const portraitP2 = `portrait_${f2.id}_${isMirror ? 'p2' : 'p2'}`;
       if (this.textures.exists(portraitP2)) {
         this.p2PortraitImage.setTexture(portraitP2).setVisible(true);
