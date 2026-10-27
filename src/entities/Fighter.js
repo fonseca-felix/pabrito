@@ -75,6 +75,7 @@ export default class Fighter {
 
     // Spritesheet Real do Lutador (se carregado no Phaser)
     this.palette = playerIndex === 1 ? 'p1' : 'p2';
+    this.isMirrorMatch = Boolean(scene.p1Data && scene.p2Data && scene.p1Data.id === scene.p2Data.id);
     const idleKey = `${this.data.id}_${this.palette}_idle`;
     this.hasSpriteSheet = scene.textures.exists(idleKey);
 
@@ -87,6 +88,19 @@ export default class Fighter {
     }
 
     // Inicializar renderização visual
+    // Indicador sobre a cabeca para diferenciar jogadores
+    const isP1 = this.playerIndex === 1;
+    this.overheadTag = scene.add.text(0, -112, isP1 ? 'P1' : (this.isMirrorMatch ? 'P2 (ALT)' : 'P2'), {
+      fontFamily: 'monospace',
+      fontSize: '11px',
+      fontStyle: 'bold',
+      color: isP1 ? '#4A90C2' : (this.isMirrorMatch ? '#E8B33A' : '#C8102E'),
+      stroke: '#0D0D12',
+      strokeThickness: 3,
+    }).setOrigin(0.5, 0.5);
+    this.container.add(this.overheadTag);
+
+    this.applyDefaultTint();
     this.renderPixelArt(0);
   }
 
@@ -110,7 +124,7 @@ export default class Fighter {
     this.container.setPosition(x, 430);
     this.body.setVelocity(0, 0);
     if (this.sprite) {
-      this.sprite.clearTint();
+      this.applyDefaultTint();
       this.playAnimation('idle');
     }
     this.renderPixelArt(0);
@@ -605,8 +619,11 @@ export default class Fighter {
     }
 
     const isP1 = this.playerIndex === 1;
-    const bodyColor = this.mainColor;
-    const accentColor = isP1 ? 0x4A90C2 : 0xC8102E;
+    let bodyColor = this.mainColor;
+    if (this.isMirrorMatch && !isP1) {
+      bodyColor = this.mainColor === 0xC8102E ? 0x2A5A8B : 0xC8102E;
+    }
+    const accentColor = isP1 ? 0x4A90C2 : (this.isMirrorMatch ? 0xE8B33A : 0xC8102E);
 
     // Outline grosso 1px preto (#0D0D12)
     const outline = 0x0D0D12;
@@ -721,6 +738,15 @@ export default class Fighter {
     }
   }
 
+  applyDefaultTint() {
+    if (!this.sprite) return;
+    if (this.isMirrorMatch && this.playerIndex === 2 && !this.scene.textures.exists(`${this.data.id}_p2_idle`)) {
+      this.sprite.setTint(0x7ec8e3);
+    } else {
+      this.sprite.clearTint();
+    }
+  }
+
   playAnimation(animName, forceRestart = false) {
     if (!this.sprite) return;
     const animKey = `${this.data.id}_${this.palette}_${animName}`;
@@ -738,7 +764,7 @@ export default class Fighter {
       this.playAnimation('hit_stun');
       this.sprite.setTint(0xffffff);
       this.scene.time.delayedCall(70, () => {
-        if (this.sprite) this.sprite.clearTint();
+        if (this.sprite) this.applyDefaultTint();
       });
     } else if (this.state === FighterState.BLOCK || this.state === FighterState.BLOCK_STUN) {
       this.playAnimation('block');

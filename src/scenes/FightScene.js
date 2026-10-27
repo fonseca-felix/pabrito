@@ -197,14 +197,15 @@ export default class FightScene extends Phaser.Scene {
     this.hudGraphics = this.add.graphics().setDepth(15);
 
     // Textos de Nomes dos Lutadores
-    this.p1NameText = this.add.text(50, 24, this.p1Data.name.toUpperCase(), {
+    const isMirror = this.p1Data.id === this.p2Data.id;
+    this.p1NameText = this.add.text(50, 24, `${this.p1Data.name.toUpperCase()} [P1]`, {
       fontFamily: 'monospace',
       fontSize: '16px',
       fontStyle: 'bold',
       color: '#FFFFFF',
     }).setDepth(16);
 
-    this.p2NameText = this.add.text(width - 50, 24, this.p2Data.name.toUpperCase(), {
+    this.p2NameText = this.add.text(width - 50, 24, isMirror ? `${this.p2Data.name.toUpperCase()} [P2 ALT]` : `${this.p2Data.name.toUpperCase()} [P2]`, {
       fontFamily: 'monospace',
       fontSize: '16px',
       fontStyle: 'bold',
@@ -258,7 +259,8 @@ export default class FightScene extends Phaser.Scene {
 
     // Anúncio "ROUND N"
     this.bannerText.setText(`ROUND ${this.roundNumber}`).setVisible(true);
-    this.subBannerText.setText('ÑORAIRÕ!').setVisible(true);
+    const isMirrorMatch = this.p1Data.id === this.p2Data.id;
+    this.subBannerText.setText(isMirrorMatch ? 'CONFRONTO ESPELHO: ÑORAIRÕ!' : 'ÑORAIRÕ!').setColor(isMirrorMatch ? '#E8B33A' : '#FFFFFF').setVisible(true);
     AudioSynth.play('round_bell');
 
     this.time.delayedCall(1200, () => {

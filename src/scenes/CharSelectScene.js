@@ -305,8 +305,9 @@ export default class CharSelectScene extends Phaser.Scene {
     // P2 Preview
     const f2 = this.fighters[this.p2Index];
     if (f2) {
-      this.p2Name.setText(f2.name.toUpperCase());
-      this.p2Title.setText((f2.title || f2.archetype).toUpperCase());
+      const isMirror = this.p1Index === this.p2Index;
+      this.p2Name.setText(isMirror ? `${f2.name.toUpperCase()} (P2 ALT)` : f2.name.toUpperCase());
+      this.p2Title.setText(isMirror ? 'PALETA ESPELHO (COR 2)' : (f2.title || f2.archetype).toUpperCase());
 
       const isMirror = this.p1Index === this.p2Index;
       const portraitP2 = `portrait_${f2.id}_${isMirror ? 'p2' : 'p2'}`;
@@ -378,7 +379,7 @@ export default class CharSelectScene extends Phaser.Scene {
     if (this.gameMode === 'arcade') {
       // No modo Arcade, a CPU escolhe um adversário aleatório diferente de P1
       let cpuIdx = Phaser.Math.Between(0, total - 1);
-      if (cpuIdx === this.p1Index) cpuIdx = (cpuIdx + 1) % total;
+      // Permite duelo espelho (shadow mirror match) se calhar no mesmo lutador
       this.p2Index = cpuIdx;
       this.p2Confirmed = true;
       this.updatePreviews();
