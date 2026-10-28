@@ -14,6 +14,14 @@ export default class BootScene extends Phaser.Scene {
     // Carregar os dados de framedata e atributos dos lutadores
     this.load.json('fightersData', '/src/data/fighters.json');
 
+    // Carregar Capa e Cenários de Batalha (Estilo Mortal Kombat)
+    this.load.image('cover_title', '/assets/stages/cover.jpg');
+    this.load.image('stage_ruinas', '/assets/stages/stage_ruinas.jpg');
+    this.load.image('stage_itaipu', '/assets/stages/stage_itaipu.jpg');
+    this.load.image('stage_panteon', '/assets/stages/stage_panteon.jpg');
+    this.load.image('stage_chaco', '/assets/stages/stage_chaco.jpg');
+    this.load.image('stage_defensores', '/assets/stages/stage_defensores.jpg');
+
     // Lista dos 5 lutadores com assets completos
     const activeFightersWithAssets = ['cabanas', 'pombero', 'nanduti', 'terere_master', 'itaipu_colossus'];
     this.registry.set('activeFightersWithAssets', activeFightersWithAssets);

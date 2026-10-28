@@ -1,5 +1,5 @@
 // src/scenes/TitleScene.js
-// Tela de Título do KUARAHY com estética Neo Geo e padrão decorativo
+// Tela de Título do KUARAHY com estética Mortal Kombat e Capa Cinematográfica
 
 import AudioSynth from '../systems/AudioSynth.js';
 
@@ -14,132 +14,96 @@ export default class TitleScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
-    // Fundo base escuro com gradiente geométrico simulado em pixel
-    this.bgGraphics = this.add.graphics();
-    this.drawBackground(width, height);
+    // 1. Capa de Abertura Mortal Kombat / KUARAHY
+    this.hasCover = this.textures.exists('cover_title');
+    if (this.hasCover) {
+      const cover = this.add.image(width / 2, height / 2, 'cover_title');
+      cover.setDisplaySize(width, height).setDepth(0);
 
-    // Efeito de estrelas / partículas animadas em pixel no fundo
-    this.stars = [];
-    for (let i = 0; i < 40; i++) {
-      this.stars.push({
-        x: Phaser.Math.Between(0, width),
-        y: Phaser.Math.Between(0, height),
-        size: Phaser.Math.Between(1, 3),
-        speed: Phaser.Math.FloatBetween(0.4, 1.2),
-        alpha: Phaser.Math.FloatBetween(0.3, 0.9),
-      });
+      // Vinheta de sombra cinematográfica superior e inferior
+      const vignette = this.add.graphics().setDepth(1);
+      vignette.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.6, 0.6, 0, 0);
+      vignette.fillRect(0, 0, width, 100);
+      vignette.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.85, 0.85);
+      vignette.fillRect(0, height - 140, width, 140);
+    } else {
+      this.bgGraphics = this.add.graphics();
+      this.drawBackground(width, height);
     }
 
-    // Título Principal "KUARAHY" em estilo Neo Geo Arcade
-    const titleShadow = this.add.text(width / 2 + 4, height / 2 - 80 + 4, 'KUARAHY', {
-      fontFamily: 'monospace',
-      fontSize: '76px',
-      fontStyle: 'bold',
-      color: '#C8102E',
-      letterSpacing: '12px',
-    }).setOrigin(0.5, 0.5);
+    // Partículas de brasas em ascensão estilo MK
+    this.embers = [];
+    for (let i = 0; i < 45; i++) {
+      this.embers.push({
+        x: Phaser.Math.Between(0, width),
+        y: Phaser.Math.Between(0, height),
+        size: Phaser.Math.Between(2, 4),
+        speed: Phaser.Math.FloatBetween(0.8, 2.2),
+        alpha: Phaser.Math.FloatBetween(0.4, 0.95),
+        color: Phaser.Math.RND.pick([0xE8B33A, 0xC8102E, 0xF39C12, 0xFF4500]),
+      });
+    }
+    this.emberGraphics = this.add.graphics().setDepth(2);
 
-    const titleMain = this.add.text(width / 2, height / 2 - 80, 'KUARAHY', {
+    // Texto de Início Arcade com brilho e borda
+    this.pressEnterText = this.add.text(width / 2, height - 55, '► TOQUE NA TELA OU PRESSIONE [ENTER] PARA INICIAR ◄', {
       fontFamily: 'monospace',
-      fontSize: '76px',
+      fontSize: '15px',
       fontStyle: 'bold',
       color: '#E8B33A',
       stroke: '#0D0D12',
-      strokeThickness: 8,
-      letterSpacing: '12px',
-    }).setOrigin(0.5, 0.5);
-
-    // Subtítulo temático
-    this.add.text(width / 2, height / 2 - 10, 'ARCADE 2D FIGHTING SYSTEM', {
-      fontFamily: 'monospace',
-      fontSize: '14px',
-      color: '#4A90C2',
-      letterSpacing: '4px',
-    }).setOrigin(0.5, 0.5);
-
-    this.add.text(width / 2, height / 2 + 15, 'ÑORAIRÕ — PARAGUAY 1998', {
-      fontFamily: 'monospace',
-      fontSize: '12px',
-      color: '#2E8B57',
+      strokeThickness: 5,
       letterSpacing: '3px',
-    }).setOrigin(0.5, 0.5);
+    }).setOrigin(0.5, 0.5).setDepth(10);
 
-    // Texto piscante "PRESS ENTER"
-    this.pressEnterText = this.add.text(width / 2, height / 2 + 110, 'PRESS ENTER TO START', {
-      fontFamily: 'monospace',
-      fontSize: '20px',
-      fontStyle: 'bold',
-      color: '#FFFFFF',
-      letterSpacing: '4px',
-    }).setOrigin(0.5, 0.5);
-
-    // Efeito de piscar clássico arcade (steps)
+    // Efeito de piscar estilo arcade
     this.tweens.add({
       targets: this.pressEnterText,
-      alpha: 0,
-      duration: 450,
+      alpha: 0.15,
+      duration: 500,
       yoyo: true,
       repeat: -1,
-      ease: 'Steps(1)',
+      ease: 'Sine.easeInOut',
     });
 
-    // Rodapé de copyright fictício estilo SNK Neo Geo
-    this.add.text(width / 2, height - 30, '© 2026 KUARAHY ENGINE • NEO GEO COMPLIANT SYSTEM', {
+    // Rodapé
+    this.add.text(width / 2, height - 20, '© 2026 KUARAHY ENGINE • PARAGUAY ARCADE FIGHTING', {
       fontFamily: 'monospace',
-      fontSize: '11px',
-      color: '#666677',
+      fontSize: '10px',
+      color: '#888899',
       letterSpacing: '2px',
-    }).setOrigin(0.5, 0.5);
+    }).setOrigin(0.5, 0.5).setDepth(10);
 
-    // Captura de teclas para avançar
+    // Teclas para iniciar
     this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.jKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
 
-    // Também permitir clique/toque na tela
+    // Clique/toque direto
     this.input.on('pointerdown', () => this.startGame());
   }
 
   drawBackground(width, height) {
     this.bgGraphics.clear();
-
-    // Faixas horizontais com tons da paleta
     this.bgGraphics.fillStyle(0x0D0D12, 1);
     this.bgGraphics.fillRect(0, 0, width, height);
-
-    // Padrão geométrico estilo Ñandutí (linhas de tecelagem simétricas)
-    this.bgGraphics.lineStyle(1, 0x1A1A24, 0.8);
-    for (let x = 0; x < width; x += 32) {
-      this.bgGraphics.lineBetween(x, 0, x, height);
-    }
-    for (let y = 0; y < height; y += 32) {
-      this.bgGraphics.lineBetween(0, y, width, y);
-    }
-
-    // Linhas diagonais simétricas cruzadas no centro
-    this.bgGraphics.lineStyle(2, 0x1E6B3A, 0.35);
-    this.bgGraphics.lineBetween(0, 0, width, height);
-    this.bgGraphics.lineBetween(width, 0, 0, height);
-
-    // Linha dourada decorativa central
-    this.bgGraphics.lineStyle(2, 0xE8B33A, 0.4);
-    this.bgGraphics.strokeCircle(width / 2, height / 2 - 80, 160);
-    this.bgGraphics.strokeCircle(width / 2, height / 2 - 80, 200);
   }
 
   update() {
-    // Animar as estrelas/partículas
-    this.bgGraphics.clear();
-    this.drawBackground(this.cameras.main.width, this.cameras.main.height);
+    // Animação contínua das brasas de fogo
+    this.emberGraphics.clear();
+    const height = this.cameras.main.height;
+    const width = this.cameras.main.width;
 
-    this.bgGraphics.fillStyle(0xE8B33A, 0.8);
-    for (const star of this.stars) {
-      star.y += star.speed;
-      if (star.y > this.cameras.main.height) {
-        star.y = 0;
-        star.x = Phaser.Math.Between(0, this.cameras.main.width);
+    for (const ember of this.embers) {
+      ember.y -= ember.speed;
+      ember.x += Math.sin(ember.y * 0.03) * 0.5;
+      if (ember.y < -10) {
+        ember.y = height + 10;
+        ember.x = Phaser.Math.Between(0, width);
       }
-      this.bgGraphics.fillRect(star.x, star.y, star.size, star.size);
+      this.emberGraphics.fillStyle(ember.color, ember.alpha);
+      this.emberGraphics.fillCircle(ember.x, ember.y, ember.size / 2);
     }
 
     if (

@@ -103,45 +103,54 @@ export default class FightScene extends Phaser.Scene {
     });
   }
 
-  drawStageBackground(width, height) {
-    const stage = this.add.graphics();
+    drawStageBackground(width, height) {
+    const stages = [
+      { key: 'stage_ruinas', name: 'RUÍNAS JESUÍTICAS DE TAVARANGUE' },
+      { key: 'stage_itaipu', name: 'VERTEDOURO DE ITAIPU' },
+      { key: 'stage_panteon', name: 'PANTEÓN NACIONAL DE LOS HÉROES' },
+      { key: 'stage_chaco', name: 'PÂNTANO DO CHACO BOREAL' },
+      { key: 'stage_defensores', name: 'ESTÁDIO DEFENSORES DEL CHACO' },
+    ];
 
-    // Céu de pôr do sol sobre o Rio Paraguai / Assunção
-    stage.fillStyle(0x0D0D12, 1);
-    stage.fillRect(0, 0, width, height);
+    // Escolhe aleatoriamente ou pelo lutador P1
+    const chosen = Phaser.Utils.Array.GetRandom(stages);
+    this.currentStageName = chosen.name;
 
-    // Faixas de pôr do sol degradê em pixel art (Neo Geo)
-    const skyTones = [0x2A5A8B, 0x4A90C2, 0xE8B33A, 0xC8102E, 0x8B0A1F];
-    const skySlice = 45;
-    skyTones.forEach((color, i) => {
-      stage.fillStyle(color, 0.6);
-      stage.fillRect(0, i * skySlice, width, skySlice);
+    if (this.textures.exists(chosen.key)) {
+      const bg = this.add.image(width / 2, height / 2, chosen.key);
+      bg.setDisplaySize(width, height).setDepth(0);
+
+      // Efeito de vinheta de combate e sombra do piso
+      const shade = this.add.graphics().setDepth(1);
+      shade.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.65, 0.65, 0, 0);
+      shade.fillRect(0, 0, width, 90);
+      shade.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.6, 0.6);
+      shade.fillRect(0, height - 110, width, 110);
+    } else {
+      const stage = this.add.graphics();
+      stage.fillStyle(0x0D0D12, 1);
+      stage.fillRect(0, 0, width, height);
+    }
+
+    // Banner com o nome da arena no canto inferior
+    this.stageNameText = this.add.text(width / 2, height - 25, 'ARENA: ' + this.currentStageName, {
+      fontFamily: 'monospace',
+      fontSize: '11px',
+      color: '#E8B33A',
+      letterSpacing: '3px',
+      stroke: '#0D0D12',
+      strokeThickness: 3,
+    }).setOrigin(0.5, 0.5).setDepth(16);
+
+    this.time.delayedCall(4000, () => {
+      if (this.stageNameText) {
+        this.tweens.add({
+          targets: this.stageNameText,
+          alpha: 0,
+          duration: 1000,
+        });
+      }
     });
-
-    // Sol dourado no horizonte (Kuarahy em Guarani significa Sol)
-    stage.fillStyle(0xE8B33A, 0.85);
-    stage.fillRect(width / 2 - 60, 90, 120, 120);
-    stage.fillStyle(0xFFF2A3, 1);
-    stage.fillRect(width / 2 - 40, 110, 80, 80);
-
-    // Silhueta distante de palmeiras de Karanda'y e arquitetura colonial
-    stage.fillStyle(0x1A1A24, 1);
-    for (let x = 60; x < width; x += 110) {
-      // Copa estilisada
-      stage.fillRect(x - 24, 210, 48, 16);
-      stage.fillRect(x - 16, 198, 32, 12);
-      // Tronco
-      stage.fillRect(x - 4, 226, 8, 110);
-    }
-
-    // Pavimento da Arena (pedras de paralelepípedo colonial)
-    stage.fillStyle(0x22222E, 1);
-    stage.fillRect(0, 336, width, height - 336);
-
-    stage.lineStyle(1, 0x38384D, 0.6);
-    for (let y = 336; y < height; y += 14) {
-      stage.lineBetween(0, y, width, y);
-    }
   }
 
   setupInputs() {
