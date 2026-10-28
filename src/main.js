@@ -16,8 +16,10 @@ export const gameConfig = {
   parent: 'game-container',
   width: 960,
   height: 540,
-  pixelArt: true,
-  roundPixels: true,
+  pixelArt: false,
+  antialias: true,
+  antialiasGL: true,
+  roundPixels: false,
   backgroundColor: '#0D0D12',
   scale: {
     mode: PhaserLib.Scale.FIT,

@@ -36,8 +36,8 @@ html, body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  /* image-rendering: auto; */
+  /* image-rendering: auto; */
 }
 
 body {

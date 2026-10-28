@@ -23,7 +23,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('stage_defensores', '/assets/stages/stage_defensores.jpg');
 
     // Lista dos 5 lutadores com assets completos
-    const activeFightersWithAssets = ['cabanas', 'pombero', 'nanduti', 'terere_master', 'itaipu_colossus'];
+    const activeFightersWithAssets = ['chilavert', 'roque', 'larissa', 'solano', 'mangore', 'cabanas', 'pombero', 'nanduti', 'terere_master', 'itaipu_colossus'];
     this.registry.set('activeFightersWithAssets', activeFightersWithAssets);
 
     const animList = [

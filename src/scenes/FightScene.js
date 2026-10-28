@@ -365,6 +365,30 @@ export default class FightScene extends Phaser.Scene {
       this.p1.update(delta, p1Input, this.p2);
       this.p2.update(delta, p2Input, this.p1);
 
+      // Trava de câmera arcade: impede que lutadores ultrapassem os limites da tela
+      const minX = 70;
+      const maxX = width - 70;
+      this.p1.container.x = Phaser.Math.Clamp(this.p1.container.x, minX, maxX);
+      this.p2.container.x = Phaser.Math.Clamp(this.p2.container.x, minX, maxX);
+
+      // Limitar distância máxima para os dois lutadores permanecerem enquadrados
+      const maxDistance = width - 160;
+      const currentDist = Math.abs(this.p1.container.x - this.p2.container.x);
+      if (currentDist > maxDistance) {
+        const mid = (this.p1.container.x + this.p2.container.x) / 2;
+        if (this.p1.container.x < this.p2.container.x) {
+          this.p1.container.x = mid - maxDistance / 2;
+          this.p2.container.x = mid + maxDistance / 2;
+        } else {
+          this.p1.container.x = mid + maxDistance / 2;
+          this.p2.container.x = mid - maxDistance / 2;
+        }
+      }
+
+      // Impede pulo acima do topo da tela
+      this.p1.container.y = Math.max(120, this.p1.container.y);
+      this.p2.container.y = Math.max(120, this.p2.container.y);
+
       // 4. Testar Colisão de Ataques via CombatSystem
       this.checkCombatHits();
 

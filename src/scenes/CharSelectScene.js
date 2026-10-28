@@ -287,7 +287,9 @@ export default class CharSelectScene extends Phaser.Scene {
 
       const portraitP1 = `portrait_${f1.id}_p1`;
       if (this.textures.exists(portraitP1)) {
-        this.p1PortraitImage.setTexture(portraitP1).setVisible(true);
+        this.p1PortraitImage.setTexture(portraitP1);
+        this.p1PortraitImage.setDisplaySize(120, 140);
+        this.p1PortraitImage.setVisible(true);
         this.p1PortraitFallback.setVisible(false);
       } else {
         this.p1PortraitFallback.setFillStyle(parseInt(f1.color.replace('#', '0x'), 16)).setVisible(true);
@@ -311,7 +313,9 @@ export default class CharSelectScene extends Phaser.Scene {
 
       const portraitP2 = `portrait_${f2.id}_${isMirror ? 'p2' : 'p2'}`;
       if (this.textures.exists(portraitP2)) {
-        this.p2PortraitImage.setTexture(portraitP2).setVisible(true);
+        this.p2PortraitImage.setTexture(portraitP2);
+        this.p2PortraitImage.setDisplaySize(120, 140);
+        this.p2PortraitImage.setVisible(true);
         this.p2PortraitFallback.setVisible(false);
       } else {
         this.p2PortraitFallback.setFillStyle(parseInt(f2.color.replace('#', '0x'), 16)).setVisible(true);
