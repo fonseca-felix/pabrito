@@ -346,6 +346,7 @@ export default class FightScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    const width = this.cameras.main.width;
     // Abrir/Fechar Lista de Golpes com TAB, M ou ESC
     if (Phaser.Input.Keyboard.JustDown(this.movelistKey) ||
         Phaser.Input.Keyboard.JustDown(this.movelistKeyM) ||

@@ -80,9 +80,9 @@ export default class Fighter {
     this.hasSpriteSheet = scene.textures.exists(idleKey);
 
     if (this.hasSpriteSheet) {
-      this.sprite = scene.add.sprite(0, -68, idleKey);
-      this.sprite.setScale(0.70);
-      this.sprite.setOrigin(0.5, 0.78);
+      this.sprite = scene.add.sprite(0, 0, idleKey);
+      this.sprite.setScale(0.75);
+      this.sprite.setOrigin(0.5, 0.95);
       this.container.add(this.sprite);
       this.playAnimation('idle');
     }

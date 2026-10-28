@@ -103,7 +103,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   createFighterAnimations() {
-    const activeFighters = ['cabanas', 'pombero', 'nanduti', 'terere_master', 'itaipu_colossus'];
+    const activeFighters = ['chilavert', 'roque', 'larissa', 'solano', 'mangore', 'cabanas', 'pombero', 'nanduti', 'terere_master', 'itaipu_colossus'];
     const animConfig = [
       { key: 'idle', fps: 10, loop: true },
       { key: 'walk_forward', fps: 14, loop: true },
