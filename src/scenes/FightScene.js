@@ -248,7 +248,7 @@ export default class FightScene extends Phaser.Scene {
       this.add.rectangle(28, 59, 38, 38).setStrokeStyle(2, 0x4A90C2).setDepth(17);
     }
 
-    const p2PortraitKey = `portrait_${this.p2Data.id}_${isMirror ? 'p2' : 'p2'}`;
+    const p2PortraitKey = `portrait_${this.p2Data.id}_${isMirror ? 'p2' : 'p1'}`;
     if (this.textures.exists(p2PortraitKey)) {
       const p2Img = this.add.image(width - 28, 59, p2PortraitKey).setDisplaySize(36, 36).setDepth(16);
       p2Img.setFlipX(true);
